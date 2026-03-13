@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bottom-Up Course"
+  short_description: "Generate a multi-chapter markdown course in bottom-up style"
+  default_prompt: "Create a multi-chapter bottom-up course on <topic>"

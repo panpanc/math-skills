@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mental Models"
+  short_description: "List 10-20 mental models for a concept or theorem"
+  default_prompt: "List the mental models employed in <concept/theorem>"

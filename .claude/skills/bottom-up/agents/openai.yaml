@@ -1,0 +1,3 @@
+interface:
+  display_name: "Bottom-Up"
+  short_description: "Build concepts/theorems from calculus and linear algebra foundations"

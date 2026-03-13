@@ -1,0 +1,4 @@
+interface:
+  display_name: "Abstraction Levels"
+  short_description: "Explain one math concept from intuitive to abstract levels (min 10 levels)"
+  default_prompt: "Explain <concept> in different levels of abstraction with at least 10 levels."

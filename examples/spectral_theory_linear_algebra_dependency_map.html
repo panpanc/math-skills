@@ -1,0 +1,1494 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spectral Theory in Linear Algebra Dependency Map</title>
+    <style>
+      :root {
+        --bg: #f1f5f9;
+        --panel: #fffefb;
+        --ink: #0f172a;
+        --muted: #475569;
+        --line: #d6d3d1;
+        --btn: #f8fafc;
+        --btn-hover: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+        background:
+          radial-gradient(circle at 8% 0%, #e2f6ff 0%, transparent 34%),
+          radial-gradient(circle at 85% 95%, #ffeecf 0%, transparent 30%),
+          var(--bg);
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        min-height: 100vh;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .board {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--panel);
+      }
+
+      #graph {
+        width: 100%;
+        height: calc(100vh - 24px);
+      }
+
+      .sidebar {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+        padding: 14px;
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+
+      h1 {
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.8rem;
+      }
+
+      p,
+      li,
+      dt,
+      dd,
+      label,
+      button,
+      select {
+        font-size: 0.88rem;
+        line-height: 1.35;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .controls {
+        display: grid;
+        gap: 8px;
+      }
+
+      .control-row {
+        display: grid;
+        gap: 5px;
+      }
+
+      label {
+        color: var(--muted);
+      }
+
+      select,
+      button {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--btn);
+        color: var(--ink);
+        padding: 7px 8px;
+      }
+
+      select[multiple] {
+        min-height: 100px;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: var(--btn-hover);
+      }
+
+      .button-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+        display: grid;
+        gap: 8px;
+      }
+
+      dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 6px 10px;
+      }
+
+      dt {
+        font-weight: 700;
+      }
+
+      dd {
+        margin: 0;
+      }
+
+      .pill {
+        display: inline-block;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        padding: 2px 8px;
+        background: #f8fafc;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+        max-height: 126px;
+        overflow: auto;
+      }
+
+      .split {
+        display: grid;
+        gap: 10px;
+      }
+
+      .legend {
+        display: grid;
+        gap: 5px;
+      }
+
+      .swatch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 8px;
+        border-radius: 2px;
+      }
+
+      .s-concept {
+        background: #2563eb;
+      }
+
+      .s-theorem {
+        background: #d97706;
+      }
+
+      .s-heat {
+        background: linear-gradient(to right, #bae6fd, #f59e0b, #dc2626);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 1040px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        #graph {
+          height: 60vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section class="board">
+        <div id="graph"></div>
+      </section>
+
+      <aside class="sidebar">
+        <h1>Dependency Map++ Viewer</h1>
+        <p class="muted">Modes: prerequisites, unlocks, bottleneck heatmap, and shortest path-to-target.</p>
+
+        <section class="card controls">
+          <h2>Mode</h2>
+          <div class="control-row">
+            <label for="mode-select">Highlight mode</label>
+            <select id="mode-select">
+              <option value="prereqs">Prereqs</option>
+              <option value="unlocks">Unlocks</option>
+              <option value="bottleneck">Bottleneck</option>
+              <option value="path">Path</option>
+            </select>
+          </div>
+
+          <div id="path-controls" class="split hidden">
+            <div class="control-row">
+              <label for="target-select">Target node</label>
+              <select id="target-select"></select>
+            </div>
+            <div class="control-row">
+              <label for="known-select">Known nodes (optional)</label>
+              <select id="known-select" multiple></select>
+            </div>
+            <button id="path-btn" type="button">Highlight Best Path</button>
+          </div>
+
+          <div class="button-grid">
+            <button id="reset-btn" type="button">Clear Highlight</button>
+            <button id="fit-btn" type="button">Fit Graph</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Selected Node</h2>
+          <dl>
+            <dt>ID</dt>
+            <dd id="meta-id">-</dd>
+            <dt>Label</dt>
+            <dd id="meta-label">-</dd>
+            <dt>Type</dt>
+            <dd id="meta-type">-</dd>
+            <dt>Source</dt>
+            <dd id="meta-source">-</dd>
+            <dt>Confidence</dt>
+            <dd id="meta-confidence">-</dd>
+          </dl>
+          <div>
+            <span class="pill">Prereqs: <strong id="prereq-count">0</strong></span>
+            <span class="pill">Unlocks: <strong id="unlock-count">0</strong></span>
+          </div>
+          <div>
+            <span class="pill">Bottleneck score: <strong id="bottleneck-score">0.0</strong></span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Path Trace</h2>
+          <p id="path-summary" class="muted">Select Path mode and choose a target.</p>
+          <ul id="path-list"></ul>
+        </section>
+
+        <section class="card split">
+          <div>
+            <h2>Prerequisites</h2>
+            <ul id="prereq-list"></ul>
+          </div>
+          <div>
+            <h2>Unlocks</h2>
+            <ul id="unlock-list"></ul>
+          </div>
+          <div>
+            <h2>Suggested Next (Top 3)</h2>
+            <ul id="next-list"></ul>
+          </div>
+          <div>
+            <h2>Top Bottlenecks</h2>
+            <ul id="bottleneck-list"></ul>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Legend</h2>
+          <div class="legend">
+            <div><span class="swatch s-concept"></span>Concept node</div>
+            <div><span class="swatch s-theorem"></span>Theorem node</div>
+            <div><span class="swatch s-heat"></span>Bottleneck heat (cool to warm)</div>
+            <div>Low-confidence nodes/edges use red border or dashed edge.</div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <script id="dependency-data" type="application/json">
+{
+  "nodes": [
+    {
+      "id": "linop",
+      "label": "Linear operator and matrix representation",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "innerprod",
+      "label": "Inner-product space",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "eigen",
+      "label": "Eigenvalues, eigenvectors, and eigenspaces",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "invsub",
+      "label": "Invariant subspace",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "orthobasis",
+      "label": "Orthonormal basis and unitary change of basis",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "adjoint",
+      "label": "Adjoint operator",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "normal",
+      "label": "Normal operator",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "selfadj",
+      "label": "Self-adjoint/Hermitian operator",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "unitaryop",
+      "label": "Unitary operator",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "schur",
+      "label": "Schur triangularization theorem",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "spectral_normal",
+      "label": "Spectral theorem for normal operators",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "real_spec",
+      "label": "Self-adjoint operators have real spectrum",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "unit_circle",
+      "label": "Unitary operators have spectrum on the unit circle",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "spectral_selfadj",
+      "label": "Spectral theorem for self-adjoint operators",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    },
+    {
+      "id": "positive",
+      "label": "Positive semidefinite operator",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "medium"
+    },
+    {
+      "id": "projcalc",
+      "label": "Spectral projections and polynomial functional calculus",
+      "type": "concept",
+      "source": "inferred",
+      "confidence": "medium"
+    },
+    {
+      "id": "svd",
+      "label": "Singular value decomposition",
+      "type": "theorem",
+      "source": "inferred",
+      "confidence": "high"
+    }
+  ],
+  "edges": [
+    {
+      "from": "innerprod",
+      "to": "orthobasis",
+      "rationale": "Orthonormality and unitary change of basis are defined from the inner product.",
+      "confidence": "high"
+    },
+    {
+      "from": "innerprod",
+      "to": "adjoint",
+      "rationale": "The adjoint is characterized by the inner-product identity.",
+      "confidence": "high"
+    },
+    {
+      "from": "linop",
+      "to": "adjoint",
+      "rationale": "The adjoint is attached to a linear operator or matrix.",
+      "confidence": "high"
+    },
+    {
+      "from": "linop",
+      "to": "eigen",
+      "rationale": "Spectral theory starts from eigenvalues and eigenspaces of operators.",
+      "confidence": "high"
+    },
+    {
+      "from": "linop",
+      "to": "invsub",
+      "rationale": "Invariant subspaces are subspaces preserved by an operator.",
+      "confidence": "high"
+    },
+    {
+      "from": "eigen",
+      "to": "schur",
+      "rationale": "Schur triangularization uses the existence of an eigenvector to start the induction.",
+      "confidence": "high"
+    },
+    {
+      "from": "invsub",
+      "to": "schur",
+      "rationale": "The induction step is organized through invariant subspaces.",
+      "confidence": "high"
+    },
+    {
+      "from": "orthobasis",
+      "to": "schur",
+      "rationale": "Schur is a unitary triangularization statement, so orthonormal bases matter.",
+      "confidence": "high"
+    },
+    {
+      "from": "adjoint",
+      "to": "normal",
+      "rationale": "Normality is defined by the commutation relation with the adjoint.",
+      "confidence": "high"
+    },
+    {
+      "from": "adjoint",
+      "to": "selfadj",
+      "rationale": "Self-adjointness is the equation `T = T^*`.",
+      "confidence": "high"
+    },
+    {
+      "from": "adjoint",
+      "to": "unitaryop",
+      "rationale": "Unitarity is stated through the adjoint equations `U^*U = UU^* = I`.",
+      "confidence": "high"
+    },
+    {
+      "from": "normal",
+      "to": "spectral_normal",
+      "rationale": "The main theorem is the diagonalization theorem for normal operators.",
+      "confidence": "high"
+    },
+    {
+      "from": "schur",
+      "to": "spectral_normal",
+      "rationale": "The standard finite-dimensional proof upgrades Schur form to diagonal form.",
+      "confidence": "high"
+    },
+    {
+      "from": "orthobasis",
+      "to": "spectral_normal",
+      "rationale": "The conclusion is diagonalization by a unitary change of basis.",
+      "confidence": "high"
+    },
+    {
+      "from": "selfadj",
+      "to": "real_spec",
+      "rationale": "Reality of the spectrum is a structural consequence of self-adjointness.",
+      "confidence": "high"
+    },
+    {
+      "from": "spectral_normal",
+      "to": "real_spec",
+      "rationale": "In a Schur-first presentation, the real diagonal form makes the spectrum visibly real.",
+      "confidence": "medium"
+    },
+    {
+      "from": "unitaryop",
+      "to": "unit_circle",
+      "rationale": "The unit-circle spectral constraint is stated for unitary operators.",
+      "confidence": "high"
+    },
+    {
+      "from": "spectral_normal",
+      "to": "unit_circle",
+      "rationale": "In a Schur-first presentation, unitary diagonalization makes modulus-one eigenvalues immediate.",
+      "confidence": "medium"
+    },
+    {
+      "from": "spectral_normal",
+      "to": "spectral_selfadj",
+      "rationale": "The self-adjoint theorem is the normal theorem specialized to Hermitian operators.",
+      "confidence": "high"
+    },
+    {
+      "from": "selfadj",
+      "to": "spectral_selfadj",
+      "rationale": "The specialization only makes sense once the self-adjoint class is defined.",
+      "confidence": "high"
+    },
+    {
+      "from": "real_spec",
+      "to": "spectral_selfadj",
+      "rationale": "The sharpened statement uses real diagonal entries, not just diagonalizability.",
+      "confidence": "medium"
+    },
+    {
+      "from": "selfadj",
+      "to": "positive",
+      "rationale": "In this map, positivity is introduced as a self-adjoint subclass defined by a quadratic-form inequality.",
+      "confidence": "medium"
+    },
+    {
+      "from": "spectral_normal",
+      "to": "projcalc",
+      "rationale": "Spectral projections and polynomial calculus are built from diagonal spectral decompositions.",
+      "confidence": "high"
+    },
+    {
+      "from": "adjoint",
+      "to": "svd",
+      "rationale": "The proof of SVD runs through the operator `T^*T`.",
+      "confidence": "high"
+    },
+    {
+      "from": "positive",
+      "to": "svd",
+      "rationale": "The positive semidefinite operator `T^*T` is the spectral object that drives SVD.",
+      "confidence": "high"
+    },
+    {
+      "from": "spectral_selfadj",
+      "to": "svd",
+      "rationale": "SVD applies the self-adjoint spectral theorem to `T^*T` and then packages singular vectors.",
+      "confidence": "high"
+    }
+  ],
+  "metrics": {
+    "formula": "score = 100 * (0.5*descendants_norm + 0.3*outdegree_norm + 0.2*betweenness_norm)",
+    "edge_weights": {
+      "high": 1,
+      "medium": 1.5,
+      "low": 2
+    },
+    "byNode": {
+      "linop": {
+        "outdegree": 3,
+        "descendants": 14,
+        "betweenness": 0,
+        "score": 72.5
+      },
+      "innerprod": {
+        "outdegree": 2,
+        "descendants": 13,
+        "betweenness": 0,
+        "score": 61.4
+      },
+      "eigen": {
+        "outdegree": 1,
+        "descendants": 7,
+        "betweenness": 1.1667,
+        "score": 33.3
+      },
+      "invsub": {
+        "outdegree": 1,
+        "descendants": 7,
+        "betweenness": 1.1667,
+        "score": 33.3
+      },
+      "orthobasis": {
+        "outdegree": 2,
+        "descendants": 7,
+        "betweenness": 4.5,
+        "score": 43.1
+      },
+      "adjoint": {
+        "outdegree": 4,
+        "descendants": 10,
+        "betweenness": 15.1667,
+        "score": 76
+      },
+      "normal": {
+        "outdegree": 1,
+        "descendants": 6,
+        "betweenness": 2.6667,
+        "score": 30.7
+      },
+      "selfadj": {
+        "outdegree": 3,
+        "descendants": 4,
+        "betweenness": 8,
+        "score": 42.2
+      },
+      "unitaryop": {
+        "outdegree": 1,
+        "descendants": 1,
+        "betweenness": 2.5,
+        "score": 12.8
+      },
+      "schur": {
+        "outdegree": 1,
+        "descendants": 6,
+        "betweenness": 13.3333,
+        "score": 38
+      },
+      "spectral_normal": {
+        "outdegree": 4,
+        "descendants": 5,
+        "betweenness": 29.5,
+        "score": 67.9
+      },
+      "real_spec": {
+        "outdegree": 1,
+        "descendants": 2,
+        "betweenness": 0,
+        "score": 14.6
+      },
+      "unit_circle": {
+        "outdegree": 0,
+        "descendants": 0,
+        "betweenness": 0,
+        "score": 0
+      },
+      "spectral_selfadj": {
+        "outdegree": 1,
+        "descendants": 1,
+        "betweenness": 7.5,
+        "score": 16.2
+      },
+      "positive": {
+        "outdegree": 1,
+        "descendants": 1,
+        "betweenness": 0.5,
+        "score": 11.4
+      },
+      "projcalc": {
+        "outdegree": 0,
+        "descendants": 0,
+        "betweenness": 0,
+        "score": 0
+      },
+      "svd": {
+        "outdegree": 0,
+        "descendants": 0,
+        "betweenness": 0,
+        "score": 0
+      }
+    }
+  },
+  "lint": {
+    "warnings": []
+  }
+}
+    </script>
+    <script src="https://unpkg.com/cytoscape@3.29.2/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+    <script>
+      (function () {
+        cytoscape.use(cytoscapeDagre);
+
+        const raw = document.getElementById("dependency-data").textContent.trim();
+        if (!raw || raw.indexOf("__DEPENDENCY_JSON__") !== -1) {
+          throw new Error("Missing embedded dependency JSON data.");
+        }
+
+        const data = JSON.parse(raw);
+        const nodes = data.nodes || [];
+        const edges = data.edges || [];
+
+        const EDGE_WEIGHT = {
+          high: 1,
+          medium: 1.5,
+          low: 2
+        };
+
+        const modeSelect = document.getElementById("mode-select");
+        const targetSelect = document.getElementById("target-select");
+        const knownSelect = document.getElementById("known-select");
+        const pathControls = document.getElementById("path-controls");
+        const pathBtn = document.getElementById("path-btn");
+        const resetBtn = document.getElementById("reset-btn");
+        const fitBtn = document.getElementById("fit-btn");
+
+        const meta = {
+          id: document.getElementById("meta-id"),
+          label: document.getElementById("meta-label"),
+          type: document.getElementById("meta-type"),
+          source: document.getElementById("meta-source"),
+          confidence: document.getElementById("meta-confidence"),
+          prereqCount: document.getElementById("prereq-count"),
+          unlockCount: document.getElementById("unlock-count"),
+          bottleneckScore: document.getElementById("bottleneck-score")
+        };
+        const prereqList = document.getElementById("prereq-list");
+        const unlockList = document.getElementById("unlock-list");
+        const nextList = document.getElementById("next-list");
+        const pathList = document.getElementById("path-list");
+        const pathSummary = document.getElementById("path-summary");
+        const bottleneckList = document.getElementById("bottleneck-list");
+
+        function confidenceWeight(conf) {
+          const key = String(conf || "medium").toLowerCase();
+          return EDGE_WEIGHT[key] || EDGE_WEIGHT.medium;
+        }
+
+        function buildIndexes(nodeRows, edgeRows) {
+          const incoming = {};
+          const outgoing = {};
+          const edgeByPair = {};
+          nodeRows.forEach((n) => {
+            incoming[n.id] = [];
+            outgoing[n.id] = [];
+          });
+          edgeRows.forEach((e, idx) => {
+            const id = "e_" + idx + "_" + e.from + "_" + e.to;
+            const edge = {
+              id: id,
+              from: e.from,
+              to: e.to,
+              confidence: e.confidence || "medium",
+              rationale: e.rationale || ""
+            };
+            if (!incoming[e.to]) incoming[e.to] = [];
+            if (!outgoing[e.from]) outgoing[e.from] = [];
+            incoming[e.to].push(edge);
+            outgoing[e.from].push(edge);
+            edgeByPair[e.from + "->" + e.to] = id;
+          });
+          return { incoming: incoming, outgoing: outgoing, edgeByPair: edgeByPair };
+        }
+
+        function collectReachable(startId, direction, index) {
+          const nodeIds = new Set();
+          const edgeIds = new Set();
+          const seen = new Set([startId]);
+          const stack = [startId];
+
+          while (stack.length > 0) {
+            const current = stack.pop();
+            const nextEdges = direction === "in" ? index.incoming[current] || [] : index.outgoing[current] || [];
+            nextEdges.forEach((edge) => {
+              const nextId = direction === "in" ? edge.from : edge.to;
+              edgeIds.add(edge.id);
+              if (!seen.has(nextId)) {
+                seen.add(nextId);
+                nodeIds.add(nextId);
+                stack.push(nextId);
+              } else {
+                nodeIds.add(nextId);
+              }
+            });
+          }
+          return { nodeIds: nodeIds, edgeIds: edgeIds };
+        }
+
+        function computeBetweenness(nodeRows, index) {
+          const ids = nodeRows.map((n) => n.id);
+          const bc = {};
+          ids.forEach((id) => {
+            bc[id] = 0;
+          });
+
+          ids.forEach((s) => {
+            const stack = [];
+            const pred = {};
+            const sigma = {};
+            const dist = {};
+            ids.forEach((id) => {
+              pred[id] = [];
+              sigma[id] = 0;
+              dist[id] = -1;
+            });
+            sigma[s] = 1;
+            dist[s] = 0;
+
+            const queue = [s];
+            while (queue.length > 0) {
+              const v = queue.shift();
+              stack.push(v);
+              (index.outgoing[v] || []).forEach((edge) => {
+                const w = edge.to;
+                if (dist[w] < 0) {
+                  queue.push(w);
+                  dist[w] = dist[v] + 1;
+                }
+                if (dist[w] === dist[v] + 1) {
+                  sigma[w] += sigma[v];
+                  pred[w].push(v);
+                }
+              });
+            }
+
+            const delta = {};
+            ids.forEach((id) => {
+              delta[id] = 0;
+            });
+            while (stack.length > 0) {
+              const w = stack.pop();
+              pred[w].forEach((v) => {
+                if (sigma[w] > 0) {
+                  delta[v] += (sigma[v] / sigma[w]) * (1 + delta[w]);
+                }
+              });
+              if (w !== s) {
+                bc[w] += delta[w];
+              }
+            }
+          });
+
+          return bc;
+        }
+
+        function normalizeMetrics(metricsByNode) {
+          let maxOut = 0;
+          let maxDesc = 0;
+          let maxBc = 0;
+
+          Object.keys(metricsByNode).forEach((id) => {
+            const m = metricsByNode[id];
+            maxOut = Math.max(maxOut, m.outdegree || 0);
+            maxDesc = Math.max(maxDesc, m.descendants || 0);
+            maxBc = Math.max(maxBc, m.betweenness || 0);
+          });
+
+          Object.keys(metricsByNode).forEach((id) => {
+            const m = metricsByNode[id];
+            const outNorm = maxOut > 0 ? m.outdegree / maxOut : 0;
+            const descNorm = maxDesc > 0 ? m.descendants / maxDesc : 0;
+            const bcNorm = maxBc > 0 ? m.betweenness / maxBc : 0;
+            const score = 100 * (0.5 * descNorm + 0.3 * outNorm + 0.2 * bcNorm);
+            m.score = Number(score.toFixed(1));
+          });
+        }
+
+        function computeMetrics(nodeRows, edgeRows) {
+          const index = buildIndexes(nodeRows, edgeRows);
+          const byNode = {};
+          nodeRows.forEach((n) => {
+            byNode[n.id] = {
+              outdegree: (index.outgoing[n.id] || []).length,
+              descendants: collectReachable(n.id, "out", index).nodeIds.size,
+              betweenness: 0,
+              score: 0
+            };
+          });
+          const bc = computeBetweenness(nodeRows, index);
+          Object.keys(bc).forEach((id) => {
+            if (byNode[id]) {
+              byNode[id].betweenness = Number(bc[id].toFixed(4));
+            }
+          });
+          normalizeMetrics(byNode);
+          return byNode;
+        }
+
+        const index = buildIndexes(nodes, edges);
+        const metricsByNode = data.metrics && data.metrics.byNode ? data.metrics.byNode : computeMetrics(nodes, edges);
+
+        const nodeItems = nodes.map((n) => ({
+          data: {
+            id: n.id,
+            label: n.label || n.id,
+            type: n.type || "concept",
+            source: n.source || "unknown",
+            confidence: n.confidence || "medium",
+            bottleneckScore: metricsByNode[n.id] ? metricsByNode[n.id].score : 0
+          }
+        }));
+
+        const edgeItems = edges.map((e, idx) => ({
+          data: {
+            id: "e_" + idx + "_" + e.from + "_" + e.to,
+            source: e.from,
+            target: e.to,
+            rationale: e.rationale || "",
+            confidence: e.confidence || "medium",
+            weight: confidenceWeight(e.confidence)
+          }
+        }));
+
+        const cy = cytoscape({
+          container: document.getElementById("graph"),
+          elements: nodeItems.concat(edgeItems),
+          style: [
+            {
+              selector: "node",
+              style: {
+                "background-color": "#2563eb",
+                label: "data(label)",
+                color: "#0f172a",
+                "font-size": 11,
+                "text-wrap": "wrap",
+                "text-max-width": 150,
+                "text-valign": "bottom",
+                "text-margin-y": 8,
+                width: 22,
+                height: 22,
+                "border-width": 2,
+                "border-color": "#e2e8f0"
+              }
+            },
+            {
+              selector: 'node[type = "theorem"]',
+              style: {
+                "background-color": "#d97706"
+              }
+            },
+            {
+              selector: 'node[confidence = "low"]',
+              style: {
+                "border-color": "#b91c1c"
+              }
+            },
+            {
+              selector: "edge",
+              style: {
+                width: 1.4,
+                "line-color": "#a8a29e",
+                "target-arrow-color": "#a8a29e",
+                "target-arrow-shape": "triangle",
+                "curve-style": "bezier",
+                "arrow-scale": 0.85
+              }
+            },
+            {
+              selector: 'edge[confidence = "low"]',
+              style: {
+                "line-style": "dashed",
+                width: 1.2
+              }
+            },
+            {
+              selector: ".selected",
+              style: {
+                "border-color": "#111827",
+                "border-width": 4
+              }
+            },
+            {
+              selector: ".prereq-node",
+              style: {
+                "background-color": "#0f766e",
+                "border-color": "#0f172a",
+                "border-width": 3
+              }
+            },
+            {
+              selector: ".prereq-edge",
+              style: {
+                "line-color": "#0f766e",
+                "target-arrow-color": "#0f766e",
+                width: 2.2
+              }
+            },
+            {
+              selector: ".unlock-node",
+              style: {
+                "background-color": "#8b5cf6",
+                "border-color": "#312e81",
+                "border-width": 3
+              }
+            },
+            {
+              selector: ".unlock-edge",
+              style: {
+                "line-color": "#8b5cf6",
+                "target-arrow-color": "#8b5cf6",
+                width: 2.2
+              }
+            },
+            {
+              selector: ".path-node",
+              style: {
+                "background-color": "#ef4444",
+                "border-color": "#7f1d1d",
+                "border-width": 4
+              }
+            },
+            {
+              selector: ".path-edge",
+              style: {
+                "line-color": "#ef4444",
+                "target-arrow-color": "#ef4444",
+                width: 3
+              }
+            },
+            {
+              selector: ".dimmed",
+              style: {
+                opacity: 0.15
+              }
+            },
+            {
+              selector: ".heat-0",
+              style: {
+                "background-color": "#7dd3fc",
+                width: 20,
+                height: 20
+              }
+            },
+            {
+              selector: ".heat-1",
+              style: {
+                "background-color": "#38bdf8",
+                width: 24,
+                height: 24
+              }
+            },
+            {
+              selector: ".heat-2",
+              style: {
+                "background-color": "#facc15",
+                width: 28,
+                height: 28
+              }
+            },
+            {
+              selector: ".heat-3",
+              style: {
+                "background-color": "#f59e0b",
+                width: 34,
+                height: 34
+              }
+            },
+            {
+              selector: ".heat-4",
+              style: {
+                "background-color": "#dc2626",
+                width: 42,
+                height: 42
+              }
+            }
+          ],
+          layout: {
+            name: "dagre",
+            rankDir: "LR",
+            nodeSep: 40,
+            rankSep: 70,
+            padding: 24
+          }
+        });
+
+        const HEAT_CLASSES = "heat-0 heat-1 heat-2 heat-3 heat-4";
+        const HIGHLIGHT_CLASSES =
+          "selected prereq-node prereq-edge unlock-node unlock-edge path-node path-edge dimmed";
+
+        function scoreToHeatClass(score) {
+          if (score >= 80) return "heat-4";
+          if (score >= 60) return "heat-3";
+          if (score >= 40) return "heat-2";
+          if (score >= 20) return "heat-1";
+          return "heat-0";
+        }
+
+        function sortNodeIdsByLabel(nodeIds) {
+          return Array.from(nodeIds).sort((a, b) => {
+            const A = cy.getElementById(a).data("label") || a;
+            const B = cy.getElementById(b).data("label") || b;
+            return A.localeCompare(B);
+          });
+        }
+
+        function getSelectedValues(selectEl) {
+          const values = [];
+          Array.from(selectEl.options).forEach((opt) => {
+            if (opt.selected) values.push(opt.value);
+          });
+          return values;
+        }
+
+        function renderList(listEl, items) {
+          listEl.innerHTML = "";
+          if (!items || items.length === 0) {
+            const li = document.createElement("li");
+            li.textContent = "-";
+            listEl.appendChild(li);
+            return;
+          }
+          items.forEach((text) => {
+            const li = document.createElement("li");
+            li.textContent = text;
+            listEl.appendChild(li);
+          });
+        }
+
+        function clearPanel() {
+          meta.id.textContent = "-";
+          meta.label.textContent = "-";
+          meta.type.textContent = "-";
+          meta.source.textContent = "-";
+          meta.confidence.textContent = "-";
+          meta.prereqCount.textContent = "0";
+          meta.unlockCount.textContent = "0";
+          meta.bottleneckScore.textContent = "0.0";
+          pathSummary.textContent = "Select Path mode and choose a target.";
+          renderList(pathList, []);
+          renderList(prereqList, []);
+          renderList(unlockList, []);
+          renderList(nextList, []);
+        }
+
+        function clearHighlights(keepHeat) {
+          cy.elements().removeClass(HIGHLIGHT_CLASSES);
+          if (!keepHeat) {
+            cy.nodes().removeClass(HEAT_CLASSES);
+          }
+        }
+
+        function applyHeatmap() {
+          cy.nodes().forEach((node) => {
+            const m = metricsByNode[node.id()] || { score: 0 };
+            node.removeClass(HEAT_CLASSES).addClass(scoreToHeatClass(m.score || 0));
+          });
+        }
+
+        function renderTopBottlenecks() {
+          const rows = Object.keys(metricsByNode).map((id) => ({
+            id: id,
+            label: cy.getElementById(id).data("label") || id,
+            score: metricsByNode[id].score || 0
+          }));
+          rows.sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
+          const top = rows.slice(0, 5).map((r) => r.label + " (" + r.id + ") - " + r.score.toFixed(1));
+          renderList(bottleneckList, top);
+        }
+
+        function updateSelectedMeta(nodeId) {
+          const node = cy.getElementById(nodeId);
+          const info = node.data();
+          const prereq = collectReachable(nodeId, "in", index);
+          const unlock = collectReachable(nodeId, "out", index);
+          const known = new Set(getSelectedValues(knownSelect));
+          const immediateOut = (index.outgoing[nodeId] || []).map((e) => e.to);
+          const suggestions = immediateOut
+            .filter((id) => !known.has(id))
+            .sort((a, b) => (metricsByNode[b] ? metricsByNode[b].score : 0) - (metricsByNode[a] ? metricsByNode[a].score : 0))
+            .slice(0, 3);
+
+          meta.id.textContent = info.id || "-";
+          meta.label.textContent = info.label || "-";
+          meta.type.textContent = info.type || "-";
+          meta.source.textContent = info.source || "-";
+          meta.confidence.textContent = info.confidence || "-";
+          meta.prereqCount.textContent = String(prereq.nodeIds.size);
+          meta.unlockCount.textContent = String(unlock.nodeIds.size);
+          meta.bottleneckScore.textContent = String((metricsByNode[nodeId] ? metricsByNode[nodeId].score : 0).toFixed(1));
+
+          const prereqLabels = sortNodeIdsByLabel(prereq.nodeIds).map((id) => {
+            const n = cy.getElementById(id).data();
+            return n.label + " (" + n.id + ")";
+          });
+          const unlockLabels = sortNodeIdsByLabel(unlock.nodeIds).map((id) => {
+            const n = cy.getElementById(id).data();
+            return n.label + " (" + n.id + ")";
+          });
+          const nextLabels = suggestions.map((id) => {
+            const n = cy.getElementById(id).data();
+            const s = metricsByNode[id] ? metricsByNode[id].score.toFixed(1) : "0.0";
+            return n.label + " (" + n.id + ") - score " + s;
+          });
+
+          renderList(prereqList, prereqLabels);
+          renderList(unlockList, unlockLabels);
+          renderList(nextList, nextLabels);
+        }
+
+        function highlightRelations(nodeId, mode) {
+          clearHighlights(false);
+          cy.elements().addClass("dimmed");
+          cy.getElementById(nodeId).removeClass("dimmed").addClass("selected");
+          const relation = mode === "unlocks" ? collectReachable(nodeId, "out", index) : collectReachable(nodeId, "in", index);
+
+          const nodeClass = mode === "unlocks" ? "unlock-node" : "prereq-node";
+          const edgeClass = mode === "unlocks" ? "unlock-edge" : "prereq-edge";
+
+          relation.nodeIds.forEach((id) => {
+            cy.getElementById(id).removeClass("dimmed").addClass(nodeClass);
+          });
+          relation.edgeIds.forEach((id) => {
+            cy.getElementById(id).removeClass("dimmed").addClass(edgeClass);
+          });
+
+          updateSelectedMeta(nodeId);
+        }
+
+        function dijkstraToTarget(targetId, knownIds) {
+          const nodeIds = nodes.map((n) => n.id);
+          const dist = {};
+          const nextHop = {};
+          nodeIds.forEach((id) => {
+            dist[id] = Infinity;
+            nextHop[id] = null;
+          });
+          dist[targetId] = 0;
+
+          const pq = [[0, targetId]];
+          while (pq.length > 0) {
+            pq.sort((a, b) => a[0] - b[0]);
+            const item = pq.shift();
+            const currentDist = item[0];
+            const currentNode = item[1];
+            if (currentDist > dist[currentNode]) continue;
+
+            (index.incoming[currentNode] || []).forEach((edge) => {
+              const prev = edge.from;
+              const alt = currentDist + confidenceWeight(edge.confidence);
+              if (alt < dist[prev]) {
+                dist[prev] = alt;
+                nextHop[prev] = currentNode;
+                pq.push([alt, prev]);
+              }
+            });
+          }
+
+          let candidates = [];
+          if (knownIds.size > 0) {
+            candidates = Array.from(knownIds);
+          } else {
+            candidates = nodeIds.filter((id) => (index.incoming[id] || []).length === 0);
+          }
+
+          let start = null;
+          let best = Infinity;
+          candidates.forEach((id) => {
+            if (dist[id] < best) {
+              best = dist[id];
+              start = id;
+            }
+          });
+
+          if (knownIds.has(targetId)) {
+            start = targetId;
+            best = 0;
+          }
+          if (start === null || !isFinite(best)) {
+            return null;
+          }
+
+          const pathNodes = [start];
+          const pathEdges = [];
+          let cursor = start;
+          let guard = 0;
+          while (cursor !== targetId && guard < nodeIds.length + 4) {
+            const nxt = nextHop[cursor];
+            if (!nxt) {
+              return null;
+            }
+            const edgeId = index.edgeByPair[cursor + "->" + nxt];
+            if (!edgeId) {
+              return null;
+            }
+            pathEdges.push(edgeId);
+            pathNodes.push(nxt);
+            cursor = nxt;
+            guard += 1;
+          }
+
+          if (cursor !== targetId) {
+            return null;
+          }
+
+          return {
+            start: start,
+            target: targetId,
+            nodes: pathNodes,
+            edges: pathEdges,
+            totalWeight: Number(best.toFixed(2))
+          };
+        }
+
+        function renderPath(pathData) {
+          if (!pathData) {
+            pathSummary.textContent = "No valid prerequisite path found from known/foundation nodes to target.";
+            renderList(pathList, []);
+            return;
+          }
+          const labels = pathData.nodes.map((id) => {
+            const n = cy.getElementById(id).data();
+            return n.label + " (" + n.id + ")";
+          });
+          pathSummary.textContent =
+            "Best path cost " + pathData.totalWeight + " from " + pathData.start + " to " + pathData.target + ".";
+          renderList(pathList, labels);
+        }
+
+        function highlightPath(targetId) {
+          const knownIds = new Set(getSelectedValues(knownSelect));
+          const result = dijkstraToTarget(targetId, knownIds);
+          clearHighlights(false);
+          cy.elements().addClass("dimmed");
+
+          if (!result) {
+            renderPath(null);
+            updateSelectedMeta(targetId);
+            cy.getElementById(targetId).removeClass("dimmed").addClass("selected");
+            return;
+          }
+
+          result.nodes.forEach((id) => {
+            cy.getElementById(id).removeClass("dimmed").addClass("path-node");
+          });
+          result.edges.forEach((id) => {
+            cy.getElementById(id).removeClass("dimmed").addClass("path-edge");
+          });
+          cy.getElementById(targetId).addClass("selected");
+
+          renderPath(result);
+          updateSelectedMeta(targetId);
+        }
+
+        function populateSelectors() {
+          const rows = nodes
+            .map((n) => ({ id: n.id, label: n.label || n.id }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+
+          rows.forEach((row) => {
+            const optA = document.createElement("option");
+            optA.value = row.id;
+            optA.textContent = row.label + " (" + row.id + ")";
+            targetSelect.appendChild(optA);
+
+            const optB = document.createElement("option");
+            optB.value = row.id;
+            optB.textContent = row.label + " (" + row.id + ")";
+            knownSelect.appendChild(optB);
+          });
+          if (rows.length > 0) {
+            targetSelect.value = rows[0].id;
+          }
+        }
+
+        function setMode(mode) {
+          const isPath = mode === "path";
+          const isBottleneck = mode === "bottleneck";
+          pathControls.classList.toggle("hidden", !isPath);
+
+          if (isBottleneck) {
+            clearHighlights(true);
+            applyHeatmap();
+            pathSummary.textContent = "Heatmap active. Click nodes to inspect bottleneck details.";
+          } else {
+            clearHighlights(false);
+            pathSummary.textContent = "Select Path mode and choose a target.";
+          }
+        }
+
+        cy.on("tap", "node", (evt) => {
+          const nodeId = evt.target.id();
+          const mode = modeSelect.value;
+
+          if (mode === "prereqs") {
+            highlightRelations(nodeId, "prereqs");
+            return;
+          }
+          if (mode === "unlocks") {
+            highlightRelations(nodeId, "unlocks");
+            return;
+          }
+          if (mode === "path") {
+            targetSelect.value = nodeId;
+            highlightPath(nodeId);
+            return;
+          }
+
+          clearHighlights(true);
+          applyHeatmap();
+          cy.getElementById(nodeId).addClass("selected");
+          updateSelectedMeta(nodeId);
+        });
+
+        cy.on("tap", (evt) => {
+          if (evt.target !== cy) return;
+          const keepHeat = modeSelect.value === "bottleneck";
+          clearHighlights(keepHeat);
+          if (keepHeat) applyHeatmap();
+          clearPanel();
+          renderTopBottlenecks();
+        });
+
+        modeSelect.addEventListener("change", () => {
+          setMode(modeSelect.value);
+          if (modeSelect.value === "path" && targetSelect.value) {
+            highlightPath(targetSelect.value);
+          } else {
+            renderTopBottlenecks();
+          }
+        });
+
+        pathBtn.addEventListener("click", () => {
+          if (modeSelect.value !== "path") {
+            modeSelect.value = "path";
+            setMode("path");
+          }
+          if (targetSelect.value) {
+            highlightPath(targetSelect.value);
+          }
+        });
+
+        targetSelect.addEventListener("change", () => {
+          if (modeSelect.value === "path" && targetSelect.value) {
+            highlightPath(targetSelect.value);
+          }
+        });
+
+        knownSelect.addEventListener("change", () => {
+          if (modeSelect.value === "path" && targetSelect.value) {
+            highlightPath(targetSelect.value);
+          }
+          const selectedNode = meta.id.textContent;
+          if (selectedNode && selectedNode !== "-") {
+            updateSelectedMeta(selectedNode);
+          }
+        });
+
+        resetBtn.addEventListener("click", () => {
+          const keepHeat = modeSelect.value === "bottleneck";
+          clearHighlights(keepHeat);
+          if (keepHeat) applyHeatmap();
+          clearPanel();
+          renderTopBottlenecks();
+        });
+
+        fitBtn.addEventListener("click", () => {
+          cy.fit(undefined, 40);
+        });
+
+        populateSelectors();
+        clearPanel();
+        renderTopBottlenecks();
+        setMode("prereqs");
+      })();
+    </script>
+  </body>
+</html>
