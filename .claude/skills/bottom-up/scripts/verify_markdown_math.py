@@ -248,6 +248,28 @@ def validate_span_warnings(span: MathSpan) -> list[str]:
             f"line {span.start_line}:{span.start_col}: fenced-code marker found inside math; move code markers outside math"
         )
 
+    if span.kind == "display":
+        raw_lines = [line.strip() for line in span.content.splitlines() if line.strip()]
+        continuation_count = sum(
+            1
+            for line in raw_lines[1:]
+            if re.match(r"^(=|\\Rightarrow|\\implies|\\to|\\mapsto|->)", line)
+        )
+        prior_step_count = sum(
+            1
+            for line in raw_lines[:-1]
+            if re.search(r"(=|\\Rightarrow|\\implies|\\to|\\mapsto|->)\s*$", line)
+        )
+        has_alignment_env = re.search(
+            r"\\begin\{(?:aligned|align|align\*|split|array|gathered)\}",
+            span.content,
+        )
+        if len(raw_lines) >= 3 and continuation_count >= 1 and prior_step_count >= 1 and not has_alignment_env:
+            warnings.append(
+                f"line {span.start_line}:{span.start_col}: multi-line display derivation is not using an alignment "
+                "environment; prefer $$\\begin{aligned}...\\end{aligned}$$ with &= style alignment"
+            )
+
     for match in TEXT_MACRO_RE.finditer(span.content):
         raw_text = match.group(1).strip()
         line_no, col_no = line_col(line_starts, match.start())

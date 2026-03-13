@@ -104,6 +104,13 @@ Explain a concept or theorem as an invention process: start from elementary buil
   - Prefer `Probability of passing the $u$-test: $$\operatorname{tr}(\rho P_u).$$` over `$$\operatorname{Prob}(u\text{-test passes})=\operatorname{tr}(\rho P_u).$$`
   - Prefer `Purity criterion: $$\rho^2=\rho.$$` over `$$\rho \text{ pure } \Longleftrightarrow \rho^2=\rho.$$`
   - Prefer one symbolic derivation chain per display block; do not mix full English sentences into `$$...$$`.
+  - If a display derivation has more than one equality, implication, or transformation step and spans multiple visual lines, wrap it in `$$\begin{aligned}...\end{aligned}$$` and align on `&=`, `&\to`, or a similar marker instead of relying on raw line breaks inside `$$...$$`.
+  - Matrix multiplications and multi-step simplifications should be vertically aligned when shown over multiple lines; prefer
+    `$$\begin{aligned}Ax &= Mx \\ &= y\end{aligned}$$`
+    over
+    `$$Ax= Mx = y$$`
+    split only by line breaks.
+  - Do not put multiple tall matrix environments such as `\begin{bmatrix}...\end{bmatrix}` on the same row of an `aligned` block. Many Markdown math renderers keep that row as one wide, unbreakable box, which leads to cramped spacing or overflow. Instead, introduce intermediate matrices in separate display blocks, then sum or compare them in a shorter follow-up display.
   - Use a conservative command subset unless the document truly needs more: `\frac`, `\sqrt`, Greek letters, superscripts/subscripts, `\operatorname{tr}`, `\begin{bmatrix}...\end{bmatrix}`, and `\left...\right` only when needed.
   - Every `$`, `$$`, `\(`, `\)`, `\[`, `\]`, `\begin{...}`, `\end{...}`, `{`, `}`, `\left`, and `\right` must balance within the same math expression.
 - Mermaid authoring constraints (to prevent parse failures):
