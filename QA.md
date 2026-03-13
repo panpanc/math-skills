@@ -4,7 +4,6 @@
 
 | Skill | Output | What it does |
 |---|---|---|
-| `abstraction-levels` | `<topic>_abstraction_levels.md` | Explains one concept across at least 10 abstraction levels with a running example |
 | `bottom-up` | `<topic>_bottom_up_vN.md` | Builds a concept or theorem upward from calculus and linear algebra, audits it, patches it, and keeps the final version |
 | `bottom-up-expand` | `<source>_<target>_expanded_bottom_up.md` and `_vN.md` | Rebuilds one weak stage or concept inside an existing document without editing the source |
 | `course-bottom-up` | `<topic>_bottom_up_course/` | Creates a syllabus-first multi-chapter course whose chapters follow the bottom-up pattern |
@@ -13,13 +12,14 @@
 | `mental-models` | `<topic>_mental_models_map.md` | Lists 10-20 mental models with exactly 5 transfer examples per model |
 | `prompts` | `<topic>_prompts.md` | Generates exactly 10 new prompts for a topic using a live `prompt_questions.md` bank |
 | `term-origins` | `<term>_origin.md` or `<a>_<b>_origins.md` | Tracks etymology, historical dates, abstraction drift, and cross-language terminology |
+| `abstraction-levels` | `<topic>_abstraction_levels.md` | Explains one concept across at least 10 abstraction levels with a running example |
 
 ## Which skill should I choose?
 
 | If you want... | Use |
 |---|---|
-| The same idea translated from intuition to formalism to high abstraction | `abstraction-levels` |
 | A concept rebuilt as an invention from basics | `bottom-up` |
+| The same idea translated from intuition to formalism to high abstraction | `abstraction-levels` |
 | One confusing stage in an existing document rebuilt carefully | `bottom-up-expand` |
 | A theorem explained so the clever move finally makes sense | `theorem` |
 | A whole study sequence instead of one artifact | `course-bottom-up` |
@@ -28,11 +28,11 @@
 | Ten fresh topic-specific prompts derived from a live question bank | `prompts` |
 | Why a term is named the way it is and how its meaning changed | `term-origins` |
 
-## What is the difference between `abstraction-levels`, `bottom-up`, and `theorem`?
-
-`abstraction-levels` keeps the concept fixed and changes the register. It is about translation: concrete view, formal view, structural view, and so on.
+## What is the difference between `bottom-up`, `abstraction-levels`, and `theorem`?
 
 `bottom-up` is about construction. It starts from elementary building blocks, climbs in strict dependency order, and tries to make the target feel invented rather than announced.
+
+`abstraction-levels` keeps the concept fixed and changes the register. It is about translation: concrete view, formal view, structural view, and so on.
 
 `theorem` assumes the theorem is already in view and focuses on why the proof works: the crux, proof anatomy, failed attempts, load-bearing hypotheses, and reusable techniques.
 
@@ -74,7 +74,6 @@ Examples:
 
 | Skill | Filename pattern |
 |---|---|
-| `abstraction-levels` | `<topic_slug>_abstraction_levels.md` |
 | `bottom-up` | Final retained file: `<topic_slug>_bottom_up_vN.md` |
 | `bottom-up-expand` | `<source_stem>_<target_slug>_expanded_bottom_up.md`, audit report, and `<...>_vN.md` |
 | `course-bottom-up` | `<topic_slug>_bottom_up_course/` with `00_syllabus.md` and chapter files |
@@ -83,6 +82,7 @@ Examples:
 | `mental-models` | `<topic_slug>_mental_models_map.md` |
 | `prompts` | `<topic_slug>_prompts.md` |
 | `term-origins` | `<term_slug>_origin.md` or `<term1>_<term2>_origins.md` |
+| `abstraction-levels` | `<topic_slug>_abstraction_levels.md` |
 
 ## Does `bottom-up` keep intermediate files?
 
@@ -136,8 +136,8 @@ Useful flags:
 ### Concept workflow
 
 ```text
-/abstraction-levels pushforward and pullback
 /bottom-up pushforward and pullback
+/abstraction-levels pushforward and pullback
 /mental-models pushforward and pullback
 /term-origins manifold
 ```

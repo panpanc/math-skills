@@ -12,7 +12,7 @@ This is one reason Math Skills is useful: it tries to reduce mathematical intimi
 
 Each skill in this repo forces a particular mathematical teaching shape instead of hoping a model improvises one.
 
-If you run `abstraction-levels`, you get a deliberate ladder with a running example, a translation table, and one claim restated across levels. If you run `theorem`, you get motivation, prerequisites, the crux, proof anatomy, failed attempts, hypothesis stress-tests, mental models, and a technique atlas. If you run `dependency-map`, you get a node inventory, edge ledger, layered order, bottlenecks, and an interactive graph instead of a vague study recommendation.
+If you run `bottom-up`, you get a staged construction that starts from elementary ingredients and climbs toward the target concept with explicit motivation, examples, and dependency order. If you run `abstraction-levels`, you get a deliberate ladder with a running example, a translation table, and one claim restated across levels. If you run `theorem`, you get motivation, prerequisites, the crux, proof anatomy, failed attempts, hypothesis stress-tests, mental models, and a technique atlas. If you run `dependency-map`, you get a node inventory, edge ledger, layered order, bottlenecks, and an interactive graph instead of a vague study recommendation.
 
 That matters because most math confusion is structural. The blocker is usually not "I need more words." It is "I need the right viewpoint, in the right order, with the hidden dependency made explicit."
 
@@ -66,18 +66,3 @@ So if the current question bank emphasizes duality, invariants, failure modes, a
 These workflows live as portable `SKILL.md` files. The repo is meant to work across Claude Code, Codex, OpenCode, Cursor, Windsurf, and similar environments.
 
 That portability matters because the core value is not a single answer. It is the reusable teaching workflow encoded in the skill itself.
-
-## Quick reference
-
-| Dimension | Math Skills | Ad hoc AI chat |
-|---|---|---|
-| Teaching structure | Skill-specific mathematical scaffold | Whatever the model happens to do |
-| Revision loop | Audit-and-repair in several workflows | Usually one pass |
-| Verification | Local deterministic checks for depth, math, Mermaid, and maps | Usually none |
-| Proof learning | Crux, failed attempts, technique atlas, stress-tests | Often only the polished proof |
-| Study planning | Explicit DAGs, layers, bottlenecks, and HTML graph views | Usually generic advice |
-| Prompt generation | Derived from the repo's `prompt_questions.md` or your override file | Usually canned or generic |
-| Outputs | Durable `.md` and `.html` artifacts | Chat scrollback |
-| Portability | Works across multiple agent tools | Often tied to one product |
-
-Math Skills does not replace AI chat. It constrains it in ways that are unusually useful for mathematical learning, especially when the goal is durable understanding rather than a one-off answer.
