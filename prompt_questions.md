@@ -24,3 +24,4 @@ Can you dualize this problem and compare what becomes easier in the dual picture
 Can you translate this problem across algebra, geometry, topology, or analysis to gain leverage?
 Can you study this object through a representation, character, or Fourier mode decomposition?
 Can you derive a key identity here by counting the same set in two different ways?
+Can you explain why mathematicians invented the concept of radical of an ideal?

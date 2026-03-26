@@ -103,6 +103,21 @@ If reused ideas are important, reference them inline inside stage `Uses:` lines 
 - Concrete examples with explicit numbers
 - Use LaTeX for math (`$...$`, `$$...$$`), never inside fenced code blocks
 - Fenced blocks only for Mermaid/code/computation traces
+- LaTeX authoring constraints (to reduce renderer failures):
+  - Prefer a single-line display equation whenever the derivation comfortably fits on one line; use `$$\begin{aligned}...\end{aligned}$$` only when multi-line alignment is genuinely necessary.
+  - Keep prose and labels outside math whenever possible; let the surrounding sentence name the event, condition, or interpretation.
+  - Use `\text{}` only for short connector words such as `and`, `if`, `for`, `where`, or `when`; do not hide multi-word labels or conditions inside equations.
+  - Prefer `Boundary condition: $$F_{y'}(b)=0.$$` over `$$F_{y'}(b)=0 \text{ at the free endpoint}.$$`
+  - Prefer one symbolic derivation chain per display block; do not mix full English sentences into `$$...$$`.
+  - If a display derivation has more than one equality, implication, or transformation step and spans multiple visual lines, wrap it in `$$\begin{aligned}...\end{aligned}$$` and align on `&=`, `&\to`, or a similar marker instead of relying on raw line breaks inside `$$...$$`.
+  - Matrix multiplications and multi-step simplifications should be vertically aligned when shown over multiple lines; prefer
+    `$$\begin{aligned}Ax &= Mx \\ &= y\end{aligned}$$`
+    over
+    `$$Ax = Mx = y$$`
+    split only by line breaks.
+  - Do not put multiple tall matrix environments such as `\begin{bmatrix}...\end{bmatrix}` on the same row of an `aligned` block. Many Markdown math renderers keep that row as one wide, unbreakable box, which leads to cramped spacing or overflow. Instead, introduce intermediate matrices in separate display blocks, then sum or compare them in a shorter follow-up display.
+  - Use a conservative command subset unless the document truly needs more: `\frac`, `\sqrt`, Greek letters, superscripts/subscripts, `\operatorname{tr}`, `\begin{bmatrix}...\end{bmatrix}`, and `\left...\right` only when needed.
+  - Every `$`, `$$`, `\(`, `\)`, `\[`, `\]`, `\begin{...}`, `\end{...}`, `{`, `}`, `\left`, and `\right` must balance within the same math expression.
 - Keep tone pedagogical and explicit
 
 **Step 7.** Save as:
@@ -114,8 +129,13 @@ Do not edit `<source_file>`.
 - Section 2 uses only calculus/linear-algebra primitives for newly added foundations
 - Section 3 has 5–9 stages and all five required subheadings in each stage
 - Section 7 has at least 4 downstream items and includes `/bottom-up-expand`
+- Run deterministic Markdown-math verification:
+  - `repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"`
+  - `python3 "$repo_root/.claude/skills/bottom-up/scripts/verify_markdown_math.py" --strict-warnings "<source_stem>_<target_slug>_expanded_bottom_up.md"`
+  - If this command reports failures, fix only the flagged math passages, usually by closing delimiters/environments, converting multi-line derivations to `aligned`, or moving prose out of math, and rerun until it passes.
 - No unclosed fences or LaTeX delimiters
 - No math inside fenced code blocks
+- Read the file and fix any issues found. Do not proceed to Phase 2 until this file is clean.
 - Source document remains unchanged
 
 ---
@@ -199,6 +219,10 @@ b) Apply patches:
 **Step 14.** Verify patched file:
 - Header complete (includes source document + expansion target)
 - All critical/moderate issues patched
+- Run deterministic Markdown-math verification:
+  - `repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"`
+  - `python3 "$repo_root/.claude/skills/bottom-up/scripts/verify_markdown_math.py" --strict-warnings "<base>_vN.md"`
+  - If this command reports failures, fix only the flagged math passages, usually by closing delimiters/environments, converting multi-line derivations to `aligned`, or moving prose out of math, and rerun until it passes.
 - No unclosed fences/LaTeX
 - Section structure intact
 

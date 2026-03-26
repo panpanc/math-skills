@@ -62,6 +62,15 @@ This skill is dedicated to prompts like:
 6. **Writing constraints**:
    - Use LaTeX (`$...$`, `$$...$$`) for math.
    - Do not put math inside fenced code blocks.
+   - LaTeX authoring constraints (to reduce renderer failures):
+     - Prefer a single-line display equation whenever the derivation comfortably fits on one line; use `$$\begin{aligned}...\end{aligned}$$` only when multi-line alignment is genuinely necessary.
+     - Keep prose and labels outside math whenever possible; let the surrounding sentence name the event, condition, or interpretation.
+     - Use `\text{}` only for short connector words such as `and`, `if`, `for`, `where`, or `when`; do not hide multi-word labels or conditions inside equations.
+     - Prefer `Factorization condition: $$f=u\circ q.$$` over `$$f \text{ factors through } q \Longleftrightarrow f=u\circ q.$$`
+     - Prefer one symbolic derivation chain per display block; do not mix full English sentences into `$$...$$`.
+     - If a display derivation has more than one equality, implication, or transformation step and spans multiple visual lines, wrap it in `$$\begin{aligned}...\end{aligned}$$` and align on `&=`, `&\to`, or a similar marker instead of relying on raw line breaks inside `$$...$$`.
+     - Use a conservative command subset unless the document truly needs more: `\frac`, `\sqrt`, Greek letters, superscripts/subscripts, `\operatorname{Hom}`, `\operatorname{Im}`, simple matrix environments, and `\left...\right` only when needed.
+     - Every `$`, `$$`, `\(`, `\)`, `\[`, `\]`, `\begin{...}`, `\end{...}`, `{`, `}`, `\left`, and `\right` must balance within the same math expression.
    - If diagrams are helpful, use Mermaid (ASCII-safe labels, one edge per line).
    - Avoid vague statements like "it generalizes things"; name what generalizes and how.
    - Every level must explicitly connect to the previous level.
@@ -76,7 +85,12 @@ This skill is dedicated to prompts like:
    - Every level includes all 6 required labeled parts.
    - Translation table has one row per level.
    - Section 5 contains one claim rewritten at each level.
-   - No unclosed fenced code blocks or LaTeX delimiters.
+   - Run deterministic Markdown-math verification:
+     - `repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"`
+     - `python3 "$repo_root/.claude/skills/bottom-up/scripts/verify_markdown_math.py" --strict-warnings "<concept_slug>_abstraction_levels.md"`
+     - If this command reports failures, fix only the flagged math passages, usually by closing delimiters/environments or moving prose out of math, and rerun until it passes.
+   - No unclosed fenced code blocks.
+   - No math inside fenced code blocks.
    - Read and patch any unclear jump before finishing.
 
 9. **Completion line**:

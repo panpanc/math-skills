@@ -99,6 +99,7 @@ Explain a concept or theorem as an invention process: start from elementary buil
 - Use LaTeX for math (`$...$`, `$$...$$`), never inside fenced code blocks.
 - Use fenced code blocks only for Mermaid diagrams, code snippets, or computation traces.
 - LaTeX authoring constraints (to reduce renderer failures):
+  - Prefer a single-line display equation whenever the derivation comfortably fits on one line; use `$$\begin{aligned}...\end{aligned}$$` only when multi-line alignment is genuinely necessary.
   - Keep prose and labels outside math whenever possible; let the surrounding sentence name the event, condition, or interpretation.
   - Use `\text{}` only for short connector words such as `and`, `if`, `for`, `where`, or `when`; do not hide multi-word labels or conditions inside equations.
   - Prefer `Probability of passing the $u$-test: $$\operatorname{tr}(\rho P_u).$$` over `$$\operatorname{Prob}(u\text{-test passes})=\operatorname{tr}(\rho P_u).$$`
