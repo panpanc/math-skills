@@ -19,6 +19,8 @@ Skills in `.claude/skills/` are auto-discovered as slash commands.
 
 **Examples:**
 - `/bottom-up spectral theorem`
+- `/motivate-learning spectral sequence`
+- `/deep-explain why the definition of sheaf uses matching families`
 - `/abstraction-levels pushforward and pullback`
 - `/theorem Cauchy-Schwarz inequality`
 - `/prompts Lie groups`
@@ -29,6 +31,8 @@ Skills are discovered from `.agents/skills/`, which is symlinked to `.claude/ski
 
 **Examples:**
 - `$bottom-up spectral theorem`
+- `$motivate-learning why learn adjunctions`
+- `$deep-explain Yoneda lemma, explain every symbol`
 - `$abstraction-levels observable in physics`
 - `$dependency-map spectral theory in linear algebra`
 - `$term-origins manifold`
@@ -46,8 +50,10 @@ This repo currently documents the user-facing math skills below.
 | Skill | Best for | Main output |
 |---|---|---|
 | `bottom-up` | Building a concept or theorem from ideas in calculus and linear algebra upward | `<topic>_bottom_up_vN.md` |
+| `motivate-learning` | Connecting a new concept or theorem to prior project artifacts before studying it | `<topic>_learning_motivation.md` |
 | `bottom-up-expand` | Repairing one weak stage or concept inside an existing document | `<source>_<target>_expanded_bottom_up.md` plus audit and `_vN.md` |
 | `course-bottom-up` | Building a full multi-chapter bottom-up course | `<topic>_bottom_up_course/` |
+| `deep-explain` | Explaining every symbol, construction choice, mental model, and likely confusion point | `<topic>_deep_explain.md` |
 | `theorem` | Making a proof intelligible, not just correct | `<theorem>_proof.md` |
 | `dependency-map` | Turning a topic or course into a prerequisite DAG and study plan | `<topic>_dependency_map.md` and `.html` |
 | `mental-models` | Extracting reusable reasoning patterns from a topic | `<topic>_mental_models_map.md` |
@@ -60,8 +66,10 @@ See [QA.md](QA.md) for skill selection and workflow details.
 ## What is current in this repo
 
 - `bottom-up` now runs a post-generation explanation audit, patches the result, and keeps only the final versioned file.
+- `motivate-learning` scans existing project artifacts and writes a motivation brief that explains why a new concept or theorem is worth learning next.
 - `dependency-map` now produces both a finalized markdown map and an interactive HTML viewer, then cleans temporary draft and audit artifacts.
 - `course-bottom-up` is syllabus-first and supports `--syllabus-only`, `--skip-audit`, and `--keep-intermediates`.
+- `deep-explain` focuses on symbol ledgers, construction motivation, mental models, and confusion clinics for first-time readers.
 - `mental-models` enforces 10-20 models with exactly 5 transfer examples per model.
 - `prompts` reads `prompt_questions.md` fresh on every run. This repo includes a default question bank, and you can override it by passing a path explicitly or placing your own `prompt_questions.md` in the working directory.
 - The repo ships deterministic helper scripts for depth checks, markdown-math checks, Mermaid validation, and dependency-map HTML generation.

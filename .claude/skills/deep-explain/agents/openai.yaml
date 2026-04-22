@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Explain"
+  short_description: "Explain math symbol by symbol with motivation"
+  default_prompt: "Use $deep-explain to explain <concept or theorem> in full detail."

@@ -42,6 +42,8 @@ Skills are organized by topic and output format:
 | Category | Skills | Output |
 |---|---|---|
 | Explanation | `explain` | .md |
+| Learning motivation | `motivate-learning` | .md |
+| Detailed explanation | `deep-explain` | .md |
 | Math concept (deep) | `concept` | .md |
 | General math Q&A | `general` | .md |
 | Theorem & proof | `theorem` | .md |

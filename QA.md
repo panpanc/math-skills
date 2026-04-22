@@ -5,8 +5,10 @@
 | Skill | Output | What it does |
 |---|---|---|
 | `bottom-up` | `<topic>_bottom_up_vN.md` | Builds a concept or theorem upward from calculus and linear algebra, audits it, patches it, and keeps the final version |
+| `motivate-learning` | `<topic>_learning_motivation.md` | Scans project artifacts and explains why a new concept or theorem is worth learning next |
 | `bottom-up-expand` | `<source>_<target>_expanded_bottom_up.md` and `_vN.md` | Rebuilds one weak stage or concept inside an existing document without editing the source |
 | `course-bottom-up` | `<topic>_bottom_up_course/` | Creates a syllabus-first multi-chapter course whose chapters follow the bottom-up pattern |
+| `deep-explain` | `<topic>_deep_explain.md` | Explains a concept or theorem symbol by symbol, with construction motivation, mental models, examples, non-examples, and confusion repair |
 | `theorem` | `<theorem>_proof.md` | Dissects a theorem and its proof across motivation, crux, walkthrough, failed attempts, and transfer techniques |
 | `dependency-map` | `<topic>_dependency_map.md` and `.html` | Produces a prerequisite DAG, layered order, bottlenecks, minimal paths, and an interactive graph viewer |
 | `mental-models` | `<topic>_mental_models_map.md` | Lists 10-20 mental models with exactly 5 transfer examples per model |
@@ -19,6 +21,8 @@
 | If you want... | Use |
 |---|---|
 | A concept rebuilt as an invention from basics | `bottom-up` |
+| Motivation for why a new topic matters given your existing notes | `motivate-learning` |
+| Every symbol, construction choice, and confusing step explained in detail | `deep-explain` |
 | The same idea translated from intuition to formalism to high abstraction | `abstraction-levels` |
 | One confusing stage in an existing document rebuilt carefully | `bottom-up-expand` |
 | A theorem explained so the clever move finally makes sense | `theorem` |
@@ -28,9 +32,11 @@
 | Ten fresh topic-specific prompts derived from a live question bank | `prompts` |
 | Why a term is named the way it is and how its meaning changed | `term-origins` |
 
-## What is the difference between `bottom-up`, `abstraction-levels`, and `theorem`?
+## What is the difference between `bottom-up`, `deep-explain`, `abstraction-levels`, and `theorem`?
 
 `bottom-up` is about construction. It starts from elementary building blocks, climbs in strict dependency order, and tries to make the target feel invented rather than announced.
+
+`deep-explain` is about clarity under a microscope. It decodes notation, motivates each construction choice, slows down confusing proof or definition steps, and adds a symbol ledger, non-examples, mental models, and a confusion clinic.
 
 `abstraction-levels` keeps the concept fixed and changes the register. It is about translation: concrete view, formal view, structural view, and so on.
 
@@ -53,7 +59,9 @@ In a normal clone of this repo, step 3 already exists. If you remove it and do n
 Yes. Several skills are designed to read existing material.
 
 - `bottom-up` can take a context file alongside the target concept or theorem.
+- `motivate-learning` can take context files or directories and prioritizes them when connecting the new target to prior study.
 - `bottom-up-expand` requires an existing markdown source file and never edits it.
+- `deep-explain` can take a notes file alongside the target and use it as source context.
 - `theorem` can read a proof or notes file and dissect that text.
 - `dependency-map` can read a course directory, syllabus, chapter set, or notes files.
 - `term-origins` can use a notes file as background context for one or more terms.
@@ -63,7 +71,9 @@ Examples:
 
 ```text
 /bottom-up my_notes.md divergence theorem
+/motivate-learning my_notes.md spectral sequence
 /bottom-up-expand stage 4 spectral_theorem_notes.md
+/deep-explain my_notes.md tensor product of modules
 /theorem my_proof_notes.md Hahn-Banach theorem
 /dependency-map my_course/
 /term-origins my_notes.md sigma-algebra
@@ -75,8 +85,10 @@ Examples:
 | Skill | Filename pattern |
 |---|---|
 | `bottom-up` | Final retained file: `<topic_slug>_bottom_up_vN.md` |
+| `motivate-learning` | `<topic_slug>_learning_motivation.md` |
 | `bottom-up-expand` | `<source_stem>_<target_slug>_expanded_bottom_up.md`, audit report, and `<...>_vN.md` |
 | `course-bottom-up` | `<topic_slug>_bottom_up_course/` with `00_syllabus.md` and chapter files |
+| `deep-explain` | `<topic_slug>_deep_explain.md` |
 | `theorem` | `<theorem_slug>_proof.md` |
 | `dependency-map` | `<topic_slug>_dependency_map.md` and `<topic_slug>_dependency_map.html` |
 | `mental-models` | `<topic_slug>_mental_models_map.md` |
@@ -137,6 +149,7 @@ Useful flags:
 
 ```text
 /bottom-up pushforward and pullback
+/deep-explain why pullbacks use a universal property
 /abstraction-levels pushforward and pullback
 /mental-models pushforward and pullback
 /term-origins manifold
@@ -167,8 +180,9 @@ This is the best fit when study order matters and you want the map before the ch
 Yes. The repo now includes deterministic helper scripts used by the skills themselves.
 
 - `bottom-up` and `course-bottom-up` use depth checks to catch thin sections or stages.
-- `bottom-up` and `mental-models` use the markdown-math verifier.
-- `bottom-up`, `theorem`, and course chapters can use Mermaid verification.
+- `bottom-up`, `deep-explain`, and `mental-models` use the markdown-math verifier.
+- `motivate-learning` uses the same markdown-math verifier from `bottom-up`.
+- `bottom-up`, `deep-explain`, `theorem`, and course chapters can use Mermaid verification.
 - `dependency-map` uses dedicated markdown and HTML structure checks.
 
 These checks are part of the workflow, not just documentation.

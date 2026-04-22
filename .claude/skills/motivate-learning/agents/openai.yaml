@@ -1,0 +1,4 @@
+interface:
+  display_name: "Motivate Learning"
+  short_description: "Connect a new math topic to your prior study"
+  default_prompt: "Use $motivate-learning to motivate why I should learn <concept or theorem>."
