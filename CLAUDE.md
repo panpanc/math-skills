@@ -17,6 +17,7 @@ Skills are organized by topic and output format:
 | LeetCode | `leetcode-notebook-py`, `leetcode-notebook-ts` | .ipynb |
 | Follow-up | `explore` | .ipynb/.md |
 | Abstraction ladder | `abstraction-levels` | .md |
+| Mental models (math field) | `field-mental-models` | .md |
 
 See [QA.md](QA.md) for usage guide and workflows.
 

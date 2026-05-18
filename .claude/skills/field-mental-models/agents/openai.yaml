@@ -1,0 +1,4 @@
+interface:
+  display_name: "Field Mental Models"
+  short_description: "Map the major mental models of a math field"
+  default_prompt: "Use $field-mental-models to list the major mental models of <math field> and show which are native vs borrowed."

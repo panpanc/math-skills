@@ -56,6 +56,7 @@ Skills are organized by topic and output format:
 | Dependency mapping | `dependency-map` | .md |
 | Dependency map audit | `dependency-map-audit` | .md |
 | Mental models (concept/theorem) | `mental-models` | .md |
+| Mental models (math field) | `field-mental-models` | .md |
 | Mental models extraction | `mental-models-extract` | .md |
 | Map-scoped course | `course-from-map` | .md |
 | Interactive notebook | `notebook-py`, `notebook-ts`, `notebook-deep-py` | .ipynb |

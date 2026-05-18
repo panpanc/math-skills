@@ -12,6 +12,7 @@
 | `theorem` | `<theorem>_proof.md` | Dissects a theorem and its proof across motivation, crux, walkthrough, failed attempts, and transfer techniques |
 | `dependency-map` | `<topic>_dependency_map.md` and `.html` | Produces a prerequisite DAG, layered order, bottlenecks, minimal paths, and an interactive graph viewer |
 | `mental-models` | `<topic>_mental_models_map.md` | Lists 10-20 mental models with exactly 5 transfer examples per model |
+| `field-mental-models` | `<field>_field_mental_models_map.md` | Lists the major mental models of a math field, labels each as native or borrowed, and gives in-field plus cross-field examples |
 | `prompts` | `<topic>_prompts.md` | Generates exactly 10 new prompts for a topic using a live `prompt_questions.md` bank |
 | `term-origins` | `<term>_origin.md` or `<a>_<b>_origins.md` | Tracks etymology, historical dates, abstraction drift, and cross-language terminology |
 | `abstraction-levels` | `<topic>_abstraction_levels.md` | Explains one concept across at least 10 abstraction levels with a running example |
@@ -29,6 +30,7 @@
 | A whole study sequence instead of one artifact | `course-bottom-up` |
 | A study-order graph for a topic or course | `dependency-map` |
 | Transferable reasoning patterns behind a topic | `mental-models` |
+| The signature reasoning habits of an entire field | `field-mental-models` |
 | Ten fresh topic-specific prompts derived from a live question bank | `prompts` |
 | Why a term is named the way it is and how its meaning changed | `term-origins` |
 
@@ -92,6 +94,7 @@ Examples:
 | `theorem` | `<theorem_slug>_proof.md` |
 | `dependency-map` | `<topic_slug>_dependency_map.md` and `<topic_slug>_dependency_map.html` |
 | `mental-models` | `<topic_slug>_mental_models_map.md` |
+| `field-mental-models` | `<field_slug>_field_mental_models_map.md` |
 | `prompts` | `<topic_slug>_prompts.md` |
 | `term-origins` | `<term_slug>_origin.md` or `<term1>_<term2>_origins.md` |
 | `abstraction-levels` | `<topic_slug>_abstraction_levels.md` |
@@ -152,6 +155,7 @@ Useful flags:
 /deep-explain why pullbacks use a universal property
 /abstraction-levels pushforward and pullback
 /mental-models pushforward and pullback
+/field-mental-models differential geometry
 /term-origins manifold
 ```
 
@@ -181,6 +185,7 @@ Yes. The repo now includes deterministic helper scripts used by the skills thems
 
 - `bottom-up` and `course-bottom-up` use depth checks to catch thin sections or stages.
 - `bottom-up`, `deep-explain`, and `mental-models` use the markdown-math verifier.
+- `field-mental-models` reuses the same markdown-math verifier from `bottom-up`.
 - `motivate-learning` uses the same markdown-math verifier from `bottom-up`.
 - `bottom-up`, `deep-explain`, `theorem`, and course chapters can use Mermaid verification.
 - `dependency-map` uses dedicated markdown and HTML structure checks.

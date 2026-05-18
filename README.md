@@ -57,6 +57,7 @@ This repo currently documents the user-facing math skills below.
 | `theorem` | Making a proof intelligible, not just correct | `<theorem>_proof.md` |
 | `dependency-map` | Turning a topic or course into a prerequisite DAG and study plan | `<topic>_dependency_map.md` and `.html` |
 | `mental-models` | Extracting reusable reasoning patterns from a topic | `<topic>_mental_models_map.md` |
+| `field-mental-models` | Mapping the signature reasoning patterns of an entire math field | `<field>_field_mental_models_map.md` |
 | `prompts` | Generating 10 target-specific prompts from a live question bank | `<topic>_prompts.md` |
 | `term-origins` | Tracing how mathematical terms evolved historically and conceptually | `<term>_origin.md` or `<a>_<b>_origins.md` |
 | `abstraction-levels` | Seeing one concept across concrete-to-abstract levels | `<topic>_abstraction_levels.md` |
@@ -71,6 +72,7 @@ See [QA.md](QA.md) for skill selection and workflow details.
 - `course-bottom-up` is syllabus-first and supports `--syllabus-only`, `--skip-audit`, and `--keep-intermediates`.
 - `deep-explain` focuses on symbol ledgers, construction motivation, mental models, and confusion clinics for first-time readers.
 - `mental-models` enforces 10-20 models with exactly 5 transfer examples per model.
+- `field-mental-models` maps a whole field's major reasoning patterns, labels each as native versus borrowed/adapted, and reuses the `bottom-up` markdown-math verifier.
 - `prompts` reads `prompt_questions.md` fresh on every run. This repo includes a default question bank, and you can override it by passing a path explicitly or placing your own `prompt_questions.md` in the working directory.
 - The repo ships deterministic helper scripts for depth checks, markdown-math checks, Mermaid validation, and dependency-map HTML generation.
 
