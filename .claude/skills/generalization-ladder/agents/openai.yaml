@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generalization Ladder"
+  short_description: "Map a concept into broader abstractions"
+  default_prompt: "Use $generalization-ladder to explain how <concept> is a special case of more general mathematical concepts."

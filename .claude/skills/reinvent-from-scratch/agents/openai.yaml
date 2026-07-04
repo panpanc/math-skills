@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reinvent From Scratch"
+  short_description: "Rediscover a concept through motivated construction"
+  default_prompt: "Use $reinvent-from-scratch to rediscover <concept> from first principles."

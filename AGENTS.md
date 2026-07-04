@@ -52,6 +52,7 @@ Skills are organized by topic and output format:
 | Math prompts | `prompts` | .md |
 | Abstraction ladder | `abstraction-levels` | .md |
 | Bottom-up foundations | `bottom-up` | .md |
+| Reinvention from scratch | `reinvent-from-scratch` | .md |
 | Term origins & etymology | `term-origins` | .md |
 | Dependency mapping | `dependency-map` | .md |
 | Dependency map audit | `dependency-map-audit` | .md |

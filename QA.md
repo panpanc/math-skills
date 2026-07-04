@@ -5,6 +5,7 @@
 | Skill | Output | What it does |
 |---|---|---|
 | `bottom-up` | `<topic>_bottom_up_vN.md` | Builds a concept or theorem upward from calculus and linear algebra, audits it, patches it, and keeps the final version |
+| `reinvent-from-scratch` | `<topic>_reinvented.md` | Rediscover a concept through failed prototypes, motivated construction stages, transfer patterns, and Markdown LaTeX validation |
 | `motivate-learning` | `<topic>_learning_motivation.md` | Scans project artifacts and explains why a new concept or theorem is worth learning next |
 | `bottom-up-expand` | `<source>_<target>_expanded_bottom_up.md` and `_vN.md` | Rebuilds one weak stage or concept inside an existing document without editing the source |
 | `course-bottom-up` | `<topic>_bottom_up_course/` | Creates a syllabus-first multi-chapter course whose chapters follow the bottom-up pattern |
@@ -22,6 +23,7 @@
 | If you want... | Use |
 |---|---|
 | A concept rebuilt as an invention from basics | `bottom-up` |
+| A concept rediscovered from scratch with every design choice motivated | `reinvent-from-scratch` |
 | Motivation for why a new topic matters given your existing notes | `motivate-learning` |
 | Every symbol, construction choice, and confusing step explained in detail | `deep-explain` |
 | The same idea translated from intuition to formalism to high abstraction | `abstraction-levels` |
@@ -34,9 +36,11 @@
 | Ten fresh topic-specific prompts derived from a live question bank | `prompts` |
 | Why a term is named the way it is and how its meaning changed | `term-origins` |
 
-## What is the difference between `bottom-up`, `deep-explain`, `abstraction-levels`, and `theorem`?
+## What is the difference between `bottom-up`, `reinvent-from-scratch`, `deep-explain`, `abstraction-levels`, and `theorem`?
 
 `bottom-up` is about construction. It starts from elementary building blocks, climbs in strict dependency order, and tries to make the target feel invented rather than announced.
+
+`reinvent-from-scratch` is about rediscovery. It starts from a problem pressure, tries plausible failed prototypes, turns each failure into a design requirement, and compares key moves with 2-3 related concepts that use similar motivation or mental models.
 
 `deep-explain` is about clarity under a microscope. It decodes notation, motivates each construction choice, slows down confusing proof or definition steps, and adds a symbol ledger, non-examples, mental models, and a confusion clinic.
 
@@ -61,6 +65,7 @@ In a normal clone of this repo, step 3 already exists. If you remove it and do n
 Yes. Several skills are designed to read existing material.
 
 - `bottom-up` can take a context file alongside the target concept or theorem.
+- `reinvent-from-scratch` can take a context file alongside the target concept and use it as background for the rediscovery path.
 - `motivate-learning` can take context files or directories and prioritizes them when connecting the new target to prior study.
 - `bottom-up-expand` requires an existing markdown source file and never edits it.
 - `deep-explain` can take a notes file alongside the target and use it as source context.
@@ -73,6 +78,7 @@ Examples:
 
 ```text
 /bottom-up my_notes.md divergence theorem
+/reinvent-from-scratch my_notes.md sheaf
 /motivate-learning my_notes.md spectral sequence
 /bottom-up-expand stage 4 spectral_theorem_notes.md
 /deep-explain my_notes.md tensor product of modules
@@ -87,6 +93,7 @@ Examples:
 | Skill | Filename pattern |
 |---|---|
 | `bottom-up` | Final retained file: `<topic_slug>_bottom_up_vN.md` |
+| `reinvent-from-scratch` | `<topic_slug>_reinvented.md` |
 | `motivate-learning` | `<topic_slug>_learning_motivation.md` |
 | `bottom-up-expand` | `<source_stem>_<target_slug>_expanded_bottom_up.md`, audit report, and `<...>_vN.md` |
 | `course-bottom-up` | `<topic_slug>_bottom_up_course/` with `00_syllabus.md` and chapter files |
@@ -184,7 +191,7 @@ This is the best fit when study order matters and you want the map before the ch
 Yes. The repo now includes deterministic helper scripts used by the skills themselves.
 
 - `bottom-up` and `course-bottom-up` use depth checks to catch thin sections or stages.
-- `bottom-up`, `deep-explain`, and `mental-models` use the markdown-math verifier.
+- `bottom-up`, `reinvent-from-scratch`, `deep-explain`, and `mental-models` use the markdown-math verifier.
 - `field-mental-models` reuses the same markdown-math verifier from `bottom-up`.
 - `motivate-learning` uses the same markdown-math verifier from `bottom-up`.
 - `bottom-up`, `deep-explain`, `theorem`, and course chapters can use Mermaid verification.

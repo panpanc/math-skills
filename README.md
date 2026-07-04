@@ -19,6 +19,7 @@ Skills in `.claude/skills/` are auto-discovered as slash commands.
 
 **Examples:**
 - `/bottom-up spectral theorem`
+- `/reinvent-from-scratch compactness`
 - `/motivate-learning spectral sequence`
 - `/deep-explain why the definition of sheaf uses matching families`
 - `/abstraction-levels pushforward and pullback`
@@ -31,6 +32,7 @@ Skills are discovered from `.agents/skills/`, which is symlinked to `.claude/ski
 
 **Examples:**
 - `$bottom-up spectral theorem`
+- `$reinvent-from-scratch tensor product`
 - `$motivate-learning why learn adjunctions`
 - `$deep-explain Yoneda lemma, explain every symbol`
 - `$abstraction-levels observable in physics`
@@ -50,6 +52,7 @@ This repo currently documents the user-facing math skills below.
 | Skill | Best for | Main output |
 |---|---|---|
 | `bottom-up` | Building a concept or theorem from ideas in calculus and linear algebra upward | `<topic>_bottom_up_vN.md` |
+| `reinvent-from-scratch` | Rediscovering a concept through motivated failed attempts, repairs, and transfer patterns | `<topic>_reinvented.md` |
 | `motivate-learning` | Connecting a new concept or theorem to prior project artifacts before studying it | `<topic>_learning_motivation.md` |
 | `bottom-up-expand` | Repairing one weak stage or concept inside an existing document | `<source>_<target>_expanded_bottom_up.md` plus audit and `_vN.md` |
 | `course-bottom-up` | Building a full multi-chapter bottom-up course | `<topic>_bottom_up_course/` |
@@ -67,6 +70,7 @@ See [QA.md](QA.md) for skill selection and workflow details.
 ## What is current in this repo
 
 - `bottom-up` now runs a post-generation explanation audit, patches the result, and keeps only the final versioned file.
+- `reinvent-from-scratch` explains concepts as rediscoveries, motivating each construction step and validating Markdown LaTeX before completion.
 - `motivate-learning` scans existing project artifacts and writes a motivation brief that explains why a new concept or theorem is worth learning next.
 - `dependency-map` now produces both a finalized markdown map and an interactive HTML viewer, then cleans temporary draft and audit artifacts.
 - `course-bottom-up` is syllabus-first and supports `--syllabus-only`, `--skip-audit`, and `--keep-intermediates`.
