@@ -1,0 +1,4 @@
+interface:
+  display_name: "Connect Concepts"
+  short_description: "Explore relationships among math ideas"
+  default_prompt: "Use $connect-concepts to map the relationships among compactness, continuity, and convergence."

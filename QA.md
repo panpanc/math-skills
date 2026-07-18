@@ -11,9 +11,13 @@
 | `course-bottom-up` | `<topic>_bottom_up_course/` | Creates a syllabus-first multi-chapter course whose chapters follow the bottom-up pattern |
 | `deep-explain` | `<topic>_deep_explain.md` | Explains a concept or theorem symbol by symbol, with construction motivation, mental models, examples, non-examples, and confusion repair |
 | `theorem` | `<theorem>_proof.md` | Dissects a theorem and its proof across motivation, crux, walkthrough, failed attempts, and transfer techniques |
+| `generalization-ladder` | `<topic>_generalization_ladder.md` | Lists broader abstractions above a concept and shows exactly how the starting concept is recovered at each rung |
+| `connect-concepts` | `<concepts>_concept_connections.md` | Maps typed relationships among multiple math ideas with concept cards, edge ledgers, bridge examples, and false-friend checks |
 | `dependency-map` | `<topic>_dependency_map.md` and `.html` | Produces a prerequisite DAG, layered order, bottlenecks, minimal paths, and an interactive graph viewer |
+| `dependency-map-audit` | `<map>_audit.md` | Audits an existing dependency map for deterministic structure issues, semantic edge problems, and concrete patch directives |
 | `mental-models` | `<topic>_mental_models_map.md` | Lists 10-20 mental models with exactly 5 transfer examples per model |
 | `field-mental-models` | `<field>_field_mental_models_map.md` | Lists the major mental models of a math field, labels each as native or borrowed, and gives in-field plus cross-field examples |
+| `deep-dive-a-mental-model-in-a-field` | `<model>_in_<field>_mental_model_trace.md` | Explains how one mental model is modified, specialized, and generalized inside a field or theory |
 | `prompts` | `<topic>_prompts.md` | Generates exactly 10 new prompts for a topic using a live `prompt_questions.md` bank |
 | `term-origins` | `<term>_origin.md` or `<a>_<b>_origins.md` | Tracks etymology, historical dates, abstraction drift, and cross-language terminology |
 | `abstraction-levels` | `<topic>_abstraction_levels.md` | Explains one concept across at least 10 abstraction levels with a running example |
@@ -27,24 +31,30 @@
 | Motivation for why a new topic matters given your existing notes | `motivate-learning` |
 | Every symbol, construction choice, and confusing step explained in detail | `deep-explain` |
 | The same idea translated from intuition to formalism to high abstraction | `abstraction-levels` |
+| The broader abstractions above a concept, with exact recovery recipes | `generalization-ladder` |
 | One confusing stage in an existing document rebuilt carefully | `bottom-up-expand` |
 | A theorem explained so the clever move finally makes sense | `theorem` |
+| How several math ideas connect, contrast, and bridge into each other | `connect-concepts` |
 | A whole study sequence instead of one artifact | `course-bottom-up` |
 | A study-order graph for a topic or course | `dependency-map` |
+| A structural and semantic review of an existing dependency map | `dependency-map-audit` |
 | Transferable reasoning patterns behind a topic | `mental-models` |
 | The signature reasoning habits of an entire field | `field-mental-models` |
+| How one mental model adapts inside a field or theory | `deep-dive-a-mental-model-in-a-field` |
 | Ten fresh topic-specific prompts derived from a live question bank | `prompts` |
 | Why a term is named the way it is and how its meaning changed | `term-origins` |
 
-## What is the difference between `bottom-up`, `reinvent-from-scratch`, `deep-explain`, `abstraction-levels`, and `theorem`?
+## What is the difference between `bottom-up`, `reinvent-from-scratch`, `deep-explain`, `abstraction-levels`, `generalization-ladder`, and `theorem`?
 
 `bottom-up` is about construction. It starts from elementary building blocks, climbs in strict dependency order, and tries to make the target feel invented rather than announced.
 
-`reinvent-from-scratch` is about rediscovery. It starts from a problem pressure, tries plausible failed prototypes, turns each failure into a design requirement, and compares key moves with 2-3 related concepts that use similar motivation or mental models.
+`reinvent-from-scratch` is about rediscovery. It starts from a problem pressure, tries plausible failed prototypes, turns each failure into a design requirement, and compares key moves with 2-3 related concepts that use similar motivation or mental models. It now defaults to 10-12 stages, but explicit counts such as `--stages 7`, `stages=9`, or `in 12 stages` are honored.
 
 `deep-explain` is about clarity under a microscope. It decodes notation, motivates each construction choice, slows down confusing proof or definition steps, and adds a symbol ledger, non-examples, mental models, and a confusion clinic.
 
 `abstraction-levels` keeps the concept fixed and changes the register. It is about translation: concrete view, formal view, structural view, and so on.
+
+`generalization-ladder` moves upward from one concept to broader concepts. It only treats a rung as legitimate when the original can be recovered by explicit data, axioms, restrictions, or forgetful moves.
 
 `theorem` assumes the theorem is already in view and focuses on why the proof works: the crux, proof anatomy, failed attempts, load-bearing hypotheses, and reusable techniques.
 
@@ -68,11 +78,18 @@ Yes. Several skills are designed to read existing material.
 - `reinvent-from-scratch` can take a context file alongside the target concept and use it as background for the rediscovery path.
 - `motivate-learning` can take context files or directories and prioritizes them when connecting the new target to prior study.
 - `bottom-up-expand` requires an existing markdown source file and never edits it.
+- `course-bottom-up` can take notes or syllabus files as optional context for course design.
 - `deep-explain` can take a notes file alongside the target and use it as source context.
 - `theorem` can read a proof or notes file and dissect that text.
+- `abstraction-levels` can take a notes file to preserve notation and examples across levels.
+- `generalization-ladder` can take a notes file to match notation or choose more relevant rungs.
+- `connect-concepts` can read notes files as context for the concept set and lens.
 - `dependency-map` can read a course directory, syllabus, chapter set, or notes files.
+- `dependency-map-audit` requires an existing dependency-map markdown file.
 - `term-origins` can use a notes file as background context for one or more terms.
 - `prompts` can read optional context files in addition to the prompt bank and target topic.
+- `field-mental-models` can read notes files to tune the field emphasis.
+- `deep-dive-a-mental-model-in-a-field` can read notes files to tune the field emphasis, terminology, and examples.
 
 Examples:
 
@@ -83,9 +100,13 @@ Examples:
 /bottom-up-expand stage 4 spectral_theorem_notes.md
 /deep-explain my_notes.md tensor product of modules
 /theorem my_proof_notes.md Hahn-Banach theorem
+/generalization-ladder my_notes.md metric space
+/connect-concepts my_notes.md compactness, continuity, convergence
 /dependency-map my_course/
+/dependency-map-audit spectral_theory_dependency_map.md
 /term-origins my_notes.md sigma-algebra
 /prompts Lie groups
+/deep-dive-a-mental-model-in-a-field my_notes.md duality in functional analysis
 ```
 
 ## What files does each skill create?
@@ -99,9 +120,13 @@ Examples:
 | `course-bottom-up` | `<topic_slug>_bottom_up_course/` with `00_syllabus.md` and chapter files |
 | `deep-explain` | `<topic_slug>_deep_explain.md` |
 | `theorem` | `<theorem_slug>_proof.md` |
+| `generalization-ladder` | `<target_slug>_generalization_ladder.md` |
+| `connect-concepts` | `<concepts_slug>_concept_connections.md` |
 | `dependency-map` | `<topic_slug>_dependency_map.md` and `<topic_slug>_dependency_map.html` |
+| `dependency-map-audit` | `<map_slug>_audit.md` |
 | `mental-models` | `<topic_slug>_mental_models_map.md` |
 | `field-mental-models` | `<field_slug>_field_mental_models_map.md` |
+| `deep-dive-a-mental-model-in-a-field` | `<model_slug>_in_<field_slug>_mental_model_trace.md` |
 | `prompts` | `<topic_slug>_prompts.md` |
 | `term-origins` | `<term_slug>_origin.md` or `<term1>_<term2>_origins.md` |
 | `abstraction-levels` | `<topic_slug>_abstraction_levels.md` |
@@ -161,12 +186,15 @@ Useful flags:
 /bottom-up pushforward and pullback
 /deep-explain why pullbacks use a universal property
 /abstraction-levels pushforward and pullback
+/generalization-ladder vector space
+/connect-concepts limits, colimits, adjunctions
 /mental-models pushforward and pullback
 /field-mental-models differential geometry
+/deep-dive-a-mental-model-in-a-field local-to-global in algebraic geometry
 /term-origins manifold
 ```
 
-This is a good path when you want the same topic as abstraction ladder, staged construction, transferable reasoning pattern, and terminology history.
+This is a good path when you want staged construction, micro-level clarity, abstraction shifts, related-concept synthesis, reusable reasoning patterns, and terminology history around a cluster of related topics.
 
 ### Proof workflow
 
@@ -181,6 +209,7 @@ This works well when a proof is globally understandable but one step still feels
 
 ```text
 /dependency-map algebraic topology
+/dependency-map-audit algebraic_topology_dependency_map.md
 /course-bottom-up algebraic topology
 ```
 
@@ -191,11 +220,14 @@ This is the best fit when study order matters and you want the map before the ch
 Yes. The repo now includes deterministic helper scripts used by the skills themselves.
 
 - `bottom-up` and `course-bottom-up` use depth checks to catch thin sections or stages.
-- `bottom-up`, `reinvent-from-scratch`, `deep-explain`, and `mental-models` use the markdown-math verifier.
+- `bottom-up`, `reinvent-from-scratch`, `deep-explain`, `generalization-ladder`, `connect-concepts`, and `mental-models` use the markdown-math verifier.
 - `field-mental-models` reuses the same markdown-math verifier from `bottom-up`.
+- `deep-dive-a-mental-model-in-a-field` reuses the same markdown-math verifier from `bottom-up`.
 - `motivate-learning` uses the same markdown-math verifier from `bottom-up`.
-- `bottom-up`, `deep-explain`, `theorem`, and course chapters can use Mermaid verification.
+- `abstraction-levels` uses the same markdown-math verifier from `bottom-up`.
+- `bottom-up`, `connect-concepts`, `deep-explain`, `generalization-ladder`, `theorem`, and course chapters can use Mermaid verification.
 - `dependency-map` uses dedicated markdown and HTML structure checks.
+- `dependency-map-audit` runs those same map checks before its semantic review.
 
 These checks are part of the workflow, not just documentation.
 

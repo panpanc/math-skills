@@ -1,8 +1,8 @@
 # Math Skills
 
-Math Skills is a math-first set of portable `SKILL.md` teaching workflows. It is built for concepts, proofs, dependency structure, term history, bottom-up explanations, and course generation, with outputs that land as durable markdown or HTML artifacts instead of disappearing into chat scrollback.
+Math Skills is a math-first set of portable `SKILL.md` teaching workflows. It is built for concepts, proofs, dependency structure, term history, concept connections, mental-model transfer, generalization ladders, bottom-up explanations, and course generation, with outputs that land as durable markdown or HTML artifacts instead of disappearing into chat scrollback.
 
-The repo is designed to work across Claude Code, Codex desktop / CLI, Cursor, Windsurf, and similar agent tools. See [WHY.md](WHY.md) for the rationale behind the workflow.
+The repo is designed to work across Claude Code, Codex desktop / CLI, OpenCode, Cursor, Windsurf, and similar agent tools. See [WHY.md](WHY.md) for the rationale behind the workflow.
 
 ## Getting started
 
@@ -23,6 +23,8 @@ Skills in `.claude/skills/` are auto-discovered as slash commands.
 - `/motivate-learning spectral sequence`
 - `/deep-explain why the definition of sheaf uses matching families`
 - `/abstraction-levels pushforward and pullback`
+- `/generalization-ladder metric space`
+- `/connect-concepts compactness, continuity, convergence`
 - `/theorem Cauchy-Schwarz inequality`
 - `/prompts Lie groups`
 
@@ -36,6 +38,8 @@ Skills are discovered from `.agents/skills/`, which is symlinked to `.claude/ski
 - `$motivate-learning why learn adjunctions`
 - `$deep-explain Yoneda lemma, explain every symbol`
 - `$abstraction-levels observable in physics`
+- `$generalization-ladder group with 12 rungs`
+- `$deep-dive-a-mental-model-in-a-field local-to-global in algebraic topology`
 - `$dependency-map spectral theory in linear algebra`
 - `$term-origins manifold`
 
@@ -44,6 +48,12 @@ Skills are discovered from `.agents/skills/`, which is symlinked to `.claude/ski
 These tools use `AGENTS.md` as project context.
 
 **Example:** `use the bottom-up skill for the spectral theorem`
+
+### OpenCode
+
+OpenCode reads `.claude/skills/` and `AGENTS.md` automatically.
+
+**Example:** `use the connect-concepts skill for compactness, continuity, and convergence`
 
 ## Skill set
 
@@ -58,9 +68,13 @@ This repo currently documents the user-facing math skills below.
 | `course-bottom-up` | Building a full multi-chapter bottom-up course | `<topic>_bottom_up_course/` |
 | `deep-explain` | Explaining every symbol, construction choice, mental model, and likely confusion point | `<topic>_deep_explain.md` |
 | `theorem` | Making a proof intelligible, not just correct | `<theorem>_proof.md` |
+| `generalization-ladder` | Showing the broader abstractions above a concept and exactly how the starting concept is recovered | `<topic>_generalization_ladder.md` |
+| `connect-concepts` | Mapping typed relationships among several math ideas | `<concepts>_concept_connections.md` |
 | `dependency-map` | Turning a topic or course into a prerequisite DAG and study plan | `<topic>_dependency_map.md` and `.html` |
+| `dependency-map-audit` | Reviewing an existing dependency map for structural and semantic edge problems | `<map>_audit.md` |
 | `mental-models` | Extracting reusable reasoning patterns from a topic | `<topic>_mental_models_map.md` |
 | `field-mental-models` | Mapping the signature reasoning patterns of an entire math field | `<field>_field_mental_models_map.md` |
+| `deep-dive-a-mental-model-in-a-field` | Tracing how one mental model is reshaped inside a mathematical field or theory | `<model>_in_<field>_mental_model_trace.md` |
 | `prompts` | Generating 10 target-specific prompts from a live question bank | `<topic>_prompts.md` |
 | `term-origins` | Tracing how mathematical terms evolved historically and conceptually | `<term>_origin.md` or `<a>_<b>_origins.md` |
 | `abstraction-levels` | Seeing one concept across concrete-to-abstract levels | `<topic>_abstraction_levels.md` |
@@ -70,19 +84,24 @@ See [QA.md](QA.md) for skill selection and workflow details.
 ## What is current in this repo
 
 - `bottom-up` now runs a post-generation explanation audit, patches the result, and keeps only the final versioned file.
-- `reinvent-from-scratch` explains concepts as rediscoveries, motivating each construction step and validating Markdown LaTeX before completion.
+- `reinvent-from-scratch` explains concepts as rediscoveries, now defaults to 10-12 motivated stages, honors explicit stage counts or ranges, and validates Markdown LaTeX before completion.
 - `motivate-learning` scans existing project artifacts and writes a motivation brief that explains why a new concept or theorem is worth learning next.
 - `dependency-map` now produces both a finalized markdown map and an interactive HTML viewer, then cleans temporary draft and audit artifacts.
+- `dependency-map-audit` can be run directly on an existing map to get deterministic structure checks, semantic edge findings, and a machine-readable patch directive block.
 - `course-bottom-up` is syllabus-first and supports `--syllabus-only`, `--skip-audit`, and `--keep-intermediates`.
 - `deep-explain` focuses on symbol ledgers, construction motivation, mental models, and confusion clinics for first-time readers.
+- `abstraction-levels` explains one concept through at least 10 levels using a continuous running example.
+- `generalization-ladder` builds 8-16 legitimate abstraction rungs and requires an explicit recovery recipe at each rung.
+- `connect-concepts` builds typed concept networks with concept cards, connection matrices, edge ledgers, synthesis themes, bridge examples, and false-friend checks.
 - `mental-models` enforces 10-20 models with exactly 5 transfer examples per model.
 - `field-mental-models` maps a whole field's major reasoning patterns, labels each as native versus borrowed/adapted, and reuses the `bottom-up` markdown-math verifier.
+- `deep-dive-a-mental-model-in-a-field` shows how a single reasoning pattern is translated, specialized, generalized, and sometimes broken inside one field.
 - `prompts` reads `prompt_questions.md` fresh on every run. This repo includes a default question bank, and you can override it by passing a path explicitly or placing your own `prompt_questions.md` in the working directory.
 - The repo ships deterministic helper scripts for depth checks, markdown-math checks, Mermaid validation, and dependency-map HTML generation.
 
 ## Why use it for math study?
 
-- **Math structure is explicit.** The skills emphasize dependency order, proof anatomy, abstraction shifts, and bottlenecks rather than generic explanation.
+- **Math structure is explicit.** The skills emphasize dependency order, proof anatomy, abstraction shifts, typed concept relations, and bottlenecks rather than generic explanation.
 - **Several workflows self-repair.** `bottom-up`, `bottom-up-expand`, `dependency-map`, and `course-bottom-up` are built around audit-and-patch loops instead of one-pass prose.
 - **Outputs are reusable files.** You keep study artifacts as markdown and HTML, compare versions, and build a corpus over time.
 - **The prompts come from a live question bank, not a canned list.** `prompts` derives new questions from the repo's default bank or your override file rather than a fixed baked-in catalog.
@@ -112,7 +131,7 @@ Contributions are welcome, especially for improving existing skills, adding new 
 
 - Update skill instructions in `.claude/skills/` when a workflow becomes clearer, more reliable, or more portable.
 - Add or refresh examples when they help show the current output structure and teaching style of a skill.
-- If a contribution changes behavior, outputs, or naming conventions, update the relevant docs in `README.md`, `QA.md`, and `WHY.md` so the repo stays internally consistent.
+- If a contribution changes behavior, outputs, or naming conventions, update the relevant docs in `README.md`, `QA.md`, `AGENTS.md`, `CLAUDE.md`, and `WHY.md` so the repo stays internally consistent.
 
 ## Learn more
 

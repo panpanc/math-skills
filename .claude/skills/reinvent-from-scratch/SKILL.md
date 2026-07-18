@@ -15,6 +15,10 @@ Use this skill for concepts and constructions. If the user asks for a named theo
 
 - Parse the invocation arguments. The first non-file argument is the target concept.
 - If an argument is a readable file path, use it as optional context.
+- Resolve the stage count:
+  - If the user specifies a count, honor it exactly. Accept phrasings such as `--stages 7`, `stages=7`, `7 stages`, or `in 7 stages`.
+  - If the user specifies a range, choose a count in that range, preferring the upper end for broad or technical concepts.
+  - If no count is specified, default to 10-12 stages: use 10 for focused concepts and 11-12 for broader or more technical concepts.
 - Infer the reader level from the prompt. If unspecified, assume a motivated reader with solid calculus and linear algebra, but not field-specific notation.
 - Save the final markdown as `<target_slug>_reinvented.md` in the current working directory.
 
@@ -61,7 +65,7 @@ At least one prototype must include a small worked example.
 
 #### 5. Reinvention Stages
 
-Build the target in 5-8 ordered stages. Each stage must use only ingredients or outputs already introduced.
+Build the target in the resolved number of ordered stages. If the user did not specify a stage count, use 10-12 stages. Each stage must use only ingredients or outputs already introduced.
 
 Each stage must include:
 
@@ -153,7 +157,7 @@ If using Mermaid:
 Before finishing:
 
 1. Check that all required sections are present and non-empty.
-2. Check that Section 5 has 5-8 stages.
+2. Check that Section 5 has the resolved number of stages, or 10-12 stages when the user did not specify a count.
 3. Check that each stage contains every required labeled item, including `Similar moves elsewhere` with 2-3 related concepts.
 4. Check that every final definition clause is motivated by an earlier stage.
 5. Check that no concept-specific symbol is used before being introduced or decoded.
@@ -196,7 +200,9 @@ Then give 2-3 context-aware next steps based on the generated document.
 
 ```text
 reinvent-from-scratch compactness
+reinvent-from-scratch compactness --stages 10
 reinvent-from-scratch tensor product of modules
+reinvent-from-scratch tensor product of modules in 12 stages
 reinvent-from-scratch my_notes.md sheaf
 reinvent-from-scratch why invent quotient spaces
 ```

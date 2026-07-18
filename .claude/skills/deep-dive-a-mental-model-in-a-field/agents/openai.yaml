@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mental Model in Field"
+  short_description: "Trace a mental model inside a field"
+  default_prompt: "Use $deep-dive-a-mental-model-in-a-field to explain how the local-to-global mental model appears in algebraic topology."
